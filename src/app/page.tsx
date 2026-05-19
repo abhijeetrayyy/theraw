@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import SmoothScroll from "@/components/SmoothScroll";
 import Nav from "@/components/Nav";
+import Cursor from "@/components/Cursor";
 import Hero from "@/components/Hero";
 import Philosophy from "@/components/Philosophy";
+import Marquee from "@/components/Marquee";
 import Difference from "@/components/Difference";
 import Collection from "@/components/Collection";
 import Process from "@/components/Process";
@@ -126,10 +128,12 @@ export default function Home() {
       <div ref={overlayRef} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "var(--color-bg)", opacity: 0, pointerEvents: "none" }} />
 
       <SmoothScroll>
+        <Cursor />
         <Nav loaded={loaded} />
         <main style={{ opacity: loaded ? 1 : 0, transition: "opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s" }}>
           <Hero />
           <Philosophy />
+          <Marquee />
           <Difference />
           <Collection />
           <Process />

@@ -95,6 +95,7 @@ export default function Hero() {
       // Scene 3 accent elements
       tl.fromTo(".hero-s3-accent", { scaleX: 0 }, { scaleX: 1, duration: 0.1 }, 0.55);
       tl.fromTo(".hero-s3-stat", { y: 20, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, stagger: 0.05, duration: 0.1 }, 0.65);
+      tl.fromTo(".hero-s3-img-accent", { clipPath: "inset(0 100% 0 0)", scale: 1.1 }, { clipPath: "inset(0 0% 0 0)", scale: 1, duration: 0.15, ease: "power3.inOut" }, 0.7);
 
       // === SCENE 3 → SCENE 4: Final transition ===
       tl.to(".hero-s3-img", { clipPath: "inset(0 0 100% 0)", duration: 0.15 }, 0.8);
@@ -110,7 +111,8 @@ export default function Hero() {
   }, { scope: section });
 
   return (
-    <section ref={section} className="relative bg-bg">
+    <section id="hero" ref={section} className="relative bg-bg">
+      <div className="divider" />
       <div ref={pinContainer} className="relative" style={{ height: "100vh" }}>
         {/* ====== SCENE 1: Opening ====== */}
         <div className="hero-entrance absolute inset-0 overflow-hidden">
@@ -163,10 +165,10 @@ export default function Hero() {
                   <p className="hero-s3-label t-label text-accent tracking-[0.35em]" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)", opacity: 0 }}>Our Philosophy</p>
                   <div style={{ marginBottom: "clamp(3rem, 6vw, 5rem)" }}>
                     <div className="overflow-hidden" style={{ marginBottom: "0.2rem" }}>
-                      <h2 className="hero-s3-heading-word t-h1 text-text">Not more.</h2>
+                      <h2 className="hero-s3-heading-word t-h1 text-text">Design with</h2>
                     </div>
                     <div className="overflow-hidden">
-                      <h2 className="hero-s3-heading-word t-h1 text-accent italic">Better.</h2>
+                      <h2 className="hero-s3-heading-word t-h1 text-accent italic">intention.</h2>
                     </div>
                   </div>
                   <p className="hero-s3-body t-body-lg max-w-md" style={{ opacity: 0 }}>In an industry overwhelmed by endless choices, true quality comes from refined selection — not abundance.</p>
@@ -186,6 +188,12 @@ export default function Hero() {
                       <p className="t-stat text-text">98%</p>
                       <p className="t-label text-text-30 mt-1">Retention</p>
                     </div>
+                  </div>
+                </div>
+                <div className="hidden lg:block lg:col-span-5 lg:col-start-8">
+                  <div className="hero-s3-img-accent relative w-full aspect-[3/4] overflow-hidden rounded-lg" style={{ opacity: 0 }}>
+                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${images[3]}")` }} />
+                    <div className="absolute inset-0 border border-text/10" style={{ margin: "clamp(1rem, 2vw, 1.5rem)" }} />
                   </div>
                 </div>
               </div>
@@ -213,7 +221,7 @@ export default function Hero() {
             <p className="hero-s4-sub t-body-lg max-w-lg mx-auto" style={{ opacity: 0, marginBottom: "clamp(3rem, 6vw, 4rem)", color: "var(--color-text-50)" }}>
               Tell us about your project. We&apos;ll respond with a curated material selection tailored to your brief.
             </p>
-            <a href="#contact" className="hero-s4-cta inline-flex items-center gap-3 text-sm font-medium text-accent hover:text-text transition-colors duration-400 group" style={{ opacity: 0 }}>
+            <a href="/contact" className="hero-s4-cta inline-flex items-center gap-3 text-sm font-medium text-accent hover:text-text transition-colors duration-400 group" style={{ opacity: 0 }}>
               <span>Start a Project</span>
               <span className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-accent/30 group-hover:border-text/30 transition-colors duration-400">
                 <svg className="w-3.5 h-3.5 transition-transform duration-400 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

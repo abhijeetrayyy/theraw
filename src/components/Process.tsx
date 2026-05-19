@@ -68,7 +68,7 @@ export default function Process() {
   }, { scope: section });
 
   return (
-    <section id="process" ref={section} className="relative bg-bg-2 overflow-hidden">
+    <section id="process" ref={section} className="relative bg-bg overflow-hidden">
       <div className="divider" />
 
       {/* Floating shapes */}
@@ -86,7 +86,7 @@ export default function Process() {
               <div className="overflow-hidden" style={{ marginBottom: "0.25rem" }}><h2 className="proc-heading-mask t-h1 text-text">Precision</h2></div>
               <div className="overflow-hidden" style={{ marginBottom: "clamp(4rem, 8vw, 8rem)" }}><h2 className="proc-heading-mask t-h1 text-accent italic">in practice.</h2></div>
             </div>
-            <p className="t-body-lg max-w-lg" style={{ marginTop: "clamp(2.5rem, 5vw, 4rem)", color: "rgba(26,26,26,0.4)" }}>Designed around how architects actually work — not how suppliers want to sell.</p>
+            <p className="t-body-lg max-w-lg" style={{ marginTop: "clamp(2.5rem, 5vw, 4rem)" }}>Designed around how architects actually work — not how suppliers want to sell.</p>
           </div>
 
           <div className="proc-steps relative">
@@ -95,18 +95,18 @@ export default function Process() {
             </div>
             <div className="space-y-0">
               {steps.map((step, i) => (
-                <div key={i} className="proc-step relative pl-0 md:pl-24">
-                  <div className="proc-dot hidden md:block absolute left-[23px] top-16 w-[15px] h-[15px] rounded-full border-2 border-accent bg-bg-2 z-10" />
-                  <div style={{ paddingTop: "clamp(4rem, 8vw, 8rem)", paddingBottom: "clamp(4rem, 8vw, 8rem)", borderBottom: i < steps.length - 1 ? "1px solid var(--color-text-08)" : "none" }}>
+                <div key={i} className="proc-step relative pl-0 md:pl-24 group cursor-default">
+                  <div className="proc-dot hidden md:block absolute left-[23px] top-16 w-[15px] h-[15px] rounded-full border-2 border-accent bg-bg z-10 transition-all duration-400 group-hover:bg-accent group-hover:scale-125" />
+                  <div style={{ paddingTop: "clamp(4rem, 8vw, 8rem)", paddingBottom: "clamp(4rem, 8vw, 8rem)", borderBottom: i < steps.length - 1 ? "1px solid var(--color-text-08)" : "none", transition: "background-color 0.4s ease" }} className="group-hover:bg-bg-2/30 -mx-4 px-4">
                     <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "clamp(3rem, 6vw, 6rem)" }}>
                       <div className="proc-img relative w-full aspect-[4/3] overflow-hidden">
                         <div className="absolute inset-0 bg-cover bg-center will-change-transform" style={{ backgroundImage: `url(${step.img})`, height: "120%", top: "-10%" }} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-bg-2/30 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-bg/30 to-transparent" />
                         <span className="absolute bottom-8 right-10 font-serif text-[6rem] md:text-[8rem] text-text/[0.04] leading-none select-none">{step.num}</span>
                       </div>
                       <div className="proc-content flex flex-col justify-center">
                         <span className="t-label text-accent block" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}>{step.num}</span>
-                        <h3 className="t-h2 text-text" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}>{step.title}</h3>
+                        <h3 className="t-h3 text-text" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}>{step.title}</h3>
                         <p className="t-body leading-relaxed max-w-sm">{step.text}</p>
                       </div>
                     </div>

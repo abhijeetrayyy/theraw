@@ -128,6 +128,7 @@ export default function Projects() {
 
   return (
     <section id="projects" ref={section} className="relative bg-bg-2 overflow-hidden">
+      <div className="divider" />
       {/* Floating shapes */}
       <div className="proj-float absolute top-[10%] right-[8%] w-20 h-20 rounded-full border border-accent/10 pointer-events-none" />
       <div className="proj-float absolute bottom-[15%] left-[10%] w-14 h-14 rounded-full bg-accent-dim pointer-events-none" />
@@ -146,7 +147,7 @@ export default function Projects() {
                 <div className="overflow-hidden" style={{ marginBottom: "0.25rem" }}><h2 className="proj-heading-mask t-h1 text-text">Where vision</h2></div>
                 <div className="overflow-hidden" style={{ marginBottom: "clamp(3rem, 6vw, 5rem)" }}><h2 className="proj-heading-mask t-h1 text-accent italic">meets material.</h2></div>
               </div>
-              <p className="proj-sub t-body-lg max-w-sm" style={{ color: "rgba(26,26,26,0.4)" }}>A selection of projects specified with Raw Select materials. Each one a testament to the power of intentional curation.</p>
+              <p className="proj-sub t-body-lg max-w-sm">A selection of projects specified with Raw Select materials. Each one a testament to the power of intentional curation.</p>
             </div>
 
             {/* Right side: hero image + accent images */}

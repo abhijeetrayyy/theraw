@@ -7,6 +7,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const ctaParticles = Array.from({ length: 20 }, (_, i) => ({
+  w: (i % 4) * 1 + 2,
+  h: (i % 3) * 1.5 + 2,
+  bg: i % 3 === 0 ? "var(--color-accent)" : "var(--color-text-15)",
+  left: `${(i * 5.3) % 100}%`,
+  top: `${(i * 7.1) % 100}%`,
+  opacity: 0.08 + (i % 4) * 0.04,
+}));
+
 export default function Cta() {
   const section = useRef<HTMLElement>(null);
   const btnRef = useRef<HTMLAnchorElement>(null);
@@ -80,13 +89,13 @@ export default function Cta() {
 
       {/* Floating particles */}
       <div className="absolute inset-0 z-5 pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="cta-particle absolute rounded-full" style={{ width: `${Math.random() * 4 + 2}px`, height: `${Math.random() * 4 + 2}px`, background: i % 3 === 0 ? "var(--color-accent)" : "var(--color-text-15)", left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, opacity: Math.random() * 0.2 + 0.05 }} />
+        {ctaParticles.map((p, i) => (
+          <div key={i} className="cta-particle absolute rounded-full" style={{ width: `${p.w}px`, height: `${p.h}px`, background: p.bg, left: p.left, top: p.top, opacity: p.opacity }} />
         ))}
       </div>
 
       <div style={{ paddingTop: "clamp(10rem, 18vw, 20rem)", paddingBottom: "clamp(10rem, 18vw, 20rem)" }}>
-        <div style={{ maxWidth: "1440px", marginInline: "auto", paddingInline: "clamp(1.5rem, 5vw, 6rem)" }}>
+        <div className="wrap">
           <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(3rem, 6vw, 6rem)", alignItems: "center" }}>
             {/* Left side image */}
             <div className="hidden lg:block lg:col-span-3">
@@ -115,7 +124,7 @@ export default function Cta() {
                 <div className="overflow-hidden" style={{ display: "flex", justifyContent: "center" }}><h2 className="cta-heading-word t-h1 text-accent italic">{"specify?".split(" ").map((w, i) => (<span key={i} className="inline-block mr-[0.3em]">{w}</span>))}</h2></div>
               </div>
 
-              <p className="cta-sub t-body-lg" style={{ marginBottom: "clamp(4rem, 8vw, 6rem)", color: "rgba(26,26,26,0.4)", maxWidth: "42rem", textAlign: "center", marginInline: "auto" }}>Tell us about your project. We&apos;ll respond with a curated material selection tailored to your brief.</p>
+              <p className="cta-sub t-body-lg" style={{ marginBottom: "clamp(4rem, 8vw, 6rem)", maxWidth: "42rem", textAlign: "center", marginInline: "auto" }}>Tell us about your project. We&apos;ll respond with a curated material selection tailored to your brief.</p>
 
               <div className="cta-btn-wrap" style={{ display: "flex", justifyContent: "center" }}>
                 <a href="/contact" ref={btnRef} className="cta-btn relative inline-flex items-center justify-center" style={{ padding: "clamp(1.25rem, 3vw, 2rem) clamp(3rem, 6vw, 5rem)" }}>

@@ -4,14 +4,16 @@ import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
 
 const links = [
-  { label: "Collection", href: "#collection" },
-  { label: "Process", href: "#process" },
-  { label: "Projects", href: "#projects" },
+  { label: "About", href: "#about", id: "about" },
+  { label: "Collection", href: "#collection", id: "collection" },
+  { label: "Process", href: "#process", id: "process" },
+  { label: "Projects", href: "#projects", id: "projects" },
 ];
 
 export default function Nav({ loaded }: { loaded: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const navRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -26,6 +28,16 @@ export default function Nav({ loaded }: { loaded: boolean }) {
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? scrollTop / docHeight : 0;
         progressRef.current.style.transform = `scaleX(${progress})`;
+      }
+
+      // Determine active section
+      const sections = ["hero", "about", "collection", "process", "projects", "contact"];
+      for (const id of sections.reverse()) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 200) {
+          setActiveSection(id);
+          break;
+        }
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -95,10 +107,10 @@ export default function Nav({ loaded }: { loaded: boolean }) {
               <a
                 key={l.label}
                 href={l.href}
-                className="relative text-sm font-medium text-text-50 hover:text-text transition-colors duration-400 group"
+                className={`relative text-sm font-medium transition-colors duration-400 group ${activeSection === l.id ? "text-text" : "text-text-50 hover:text-text"}`}
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-1/2 w-0 h-[1px] bg-accent group-hover:w-full group-hover:left-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" />
+                <span className={`absolute -bottom-1 left-1/2 h-[1px] bg-accent transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${activeSection === l.id ? "w-full left-0" : "w-0 group-hover:w-full group-hover:left-0"}`} />
               </a>
             ))}
           </nav>

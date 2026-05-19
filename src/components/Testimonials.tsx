@@ -65,11 +65,20 @@ export default function Testimonials() {
 
       // Parallax on card
       gsap.to(card, { yPercent: -3, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
+
+      // Hover effect
+      card.addEventListener("mouseenter", () => {
+        gsap.to(card, { y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.06)", borderColor: "var(--color-accent/20)", duration: 0.4, ease: "power2.out" });
+      });
+      card.addEventListener("mouseleave", () => {
+        gsap.to(card, { y: 0, boxShadow: "none", borderColor: "var(--color-text-08)", duration: 0.4, ease: "power2.out" });
+      });
     });
   }, { scope: section });
 
   return (
     <section id="testimonials" ref={section} className="relative bg-bg overflow-hidden">
+      <div className="divider" />
       {/* Floating quote marks */}
       <div className="test-quote-float absolute top-[15%] left-[5%] text-[12rem] font-serif text-accent/[0.06] leading-none pointer-events-none select-none">&ldquo;</div>
       <div className="test-quote-float absolute bottom-[10%] right-[8%] text-[10rem] font-serif text-accent/[0.06] leading-none pointer-events-none select-none">&rdquo;</div>
@@ -89,8 +98,8 @@ export default function Testimonials() {
 
           <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(3rem, 6vw, 5rem)" }}>
             {testimonials.map((t, i) => (
-              <div key={i} className="test-card relative">
-                <div className="absolute -top-10 left-0 text-7xl font-serif text-accent/10 leading-none select-none">&ldquo;</div>
+              <div key={i} className="test-card relative group cursor-default" style={{ padding: "clamp(2rem, 4vw, 3rem)", borderRadius: "8px", border: "1px solid var(--color-text-08)", transition: "border-color 0.4s ease, box-shadow 0.4s ease" }}>
+                <div className="absolute -top-3 left-8 text-5xl font-serif text-accent/10 leading-none select-none group-hover:text-accent/20 transition-colors duration-400">&ldquo;</div>
                 <div style={{ paddingTop: "clamp(3rem, 6vw, 5rem)" }}>
                   <div className="test-quote-text" style={{ marginBottom: "clamp(4rem, 8vw, 6rem)" }}>
                     {t.quote.split(" ").map((w, wi) => (<span key={wi} className="inline-block mr-[0.3em]">{w}</span>))}
@@ -105,7 +114,7 @@ export default function Testimonials() {
                     </div>
                   </div>
                 </div>
-                <div className="absolute bottom-0 right-0 text-[5rem] font-serif text-accent/10 leading-none select-none">&rdquo;</div>
+                <div className="absolute bottom-2 right-6 text-4xl font-serif text-accent/10 leading-none select-none group-hover:text-accent/20 transition-colors duration-400">&rdquo;</div>
               </div>
             ))}
           </div>

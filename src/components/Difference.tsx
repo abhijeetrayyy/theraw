@@ -95,6 +95,7 @@ export default function Difference() {
 
   return (
     <section id="about" ref={section} className="relative bg-bg overflow-hidden" style={{ paddingTop: "clamp(10rem, 18vw, 20rem)", paddingBottom: "clamp(10rem, 18vw, 20rem)" }}>
+      <div className="divider" />
       {/* Floating shapes */}
       <div className="diff-float absolute top-[12%] right-[6%] w-28 h-28 rounded-full border border-accent/10 pointer-events-none" />
       <div className="diff-float absolute bottom-[18%] left-[8%] w-20 h-20 rounded-full bg-accent-dim pointer-events-none" />

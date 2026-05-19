@@ -14,6 +14,15 @@ const categories = [
   { title: "Bespoke", desc: "When the standard isn't enough. Custom material solutions for projects that demand something no catalog provides.", img: "/premium_photo-1670360414483-64e6d9ba9038.avif", tag: "Made to order" },
 ];
 
+const collParticles = Array.from({ length: 12 }, (_, i) => ({
+  w: (i % 4) * 1 + 2,
+  h: (i % 3) * 1.5 + 2,
+  bg: i % 3 === 0 ? "var(--color-accent)" : "var(--color-text-15)",
+  left: `${(i * 8.3) % 100}%`,
+  top: `${(i * 13.7) % 100}%`,
+  opacity: 0.15 + (i % 5) * 0.05,
+}));
+
 export default function Collection() {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -61,14 +70,15 @@ export default function Collection() {
 
   return (
     <section id="collection" ref={section} className="h-screen w-full bg-bg-2 overflow-hidden flex items-center relative">
+      <div className="divider" />
       <div className="absolute inset-0 z-20 pointer-events-none">
         <div className="h-full w-[55%] bg-gradient-to-r from-bg-2 via-bg-2/70 to-transparent" />
       </div>
 
       {/* Floating particles */}
       <div className="absolute inset-0 z-5 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
-          <div key={i} className="coll-particle absolute rounded-full" style={{ width: `${Math.random() * 4 + 2}px`, height: `${Math.random() * 4 + 2}px`, background: i % 3 === 0 ? "var(--color-accent)" : "var(--color-text-15)", left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, opacity: Math.random() * 0.3 + 0.1 }} />
+        {collParticles.map((p, i) => (
+          <div key={i} className="coll-particle absolute rounded-full" style={{ width: `${p.w}px`, height: `${p.h}px`, background: p.bg, left: p.left, top: p.top, opacity: p.opacity }} />
         ))}
       </div>
 
@@ -108,6 +118,7 @@ export default function Collection() {
         ))}
         <div className="shrink-0" style={{ width: "5vw" }} />
       </div>
+      <div className="divider" />
     </section>
   );
 }
