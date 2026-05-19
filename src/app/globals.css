@@ -1,168 +1,346 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark: #0a0a0a;
-  --color-dark-rgb: 10, 10, 10;
-  --color-light: #f0efe8;
-  --color-light-rgb: 240, 239, 232;
-  --color-accent: #c4a97d;
-  --color-accent-rgb: 196, 169, 125;
-  --color-muted: #8a8a8a;
-  --color-muted-rgb: 138, 138, 138;
-  --color-border: rgba(240, 239, 232, 0.08);
-  --color-border-strong: rgba(240, 239, 232, 0.15);
+  /* Light theme palette — warm editorial gallery aesthetic */
+  --color-bg: #faf8f5;
+  --color-bg-2: #f2efe9;
+  --color-bg-3: #e8e4dc;
+  --color-surface: #f7f5f1;
 
+  /* Text tones — deep charcoal */
+  --color-text: #1a1a1a;
+  --color-text-2: #2d2d2d;
+  --color-text-70: rgba(26, 26, 26, 0.7);
+  --color-text-50: rgba(26, 26, 26, 0.55);
+  --color-text-30: rgba(26, 26, 26, 0.3);
+  --color-text-15: rgba(26, 26, 26, 0.15);
+  --color-text-08: rgba(26, 26, 26, 0.08);
+  --color-text-04: rgba(26, 26, 26, 0.04);
+
+  /* Accent — deep warm gold (darker for light bg contrast) */
+  --color-accent: #8b6914;
+  --color-accent-bright: #a67c1a;
+  --color-accent-dim: rgba(139, 105, 20, 0.12);
+
+  /* Muted */
+  --color-muted: #6b6b6b;
+
+  /* Fonts */
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-mono: "SF Mono", "Fira Code", monospace;
 }
 
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ─────────────────── RESET ─────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
   scroll-behavior: auto;
-  -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   overflow-x: hidden;
-  background: var(--color-dark);
-  color: var(--color-light);
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-sans);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-dark);
+  color: var(--color-bg);
 }
 
-/* ═══════════════════════════════════════
-   TYPOGRAPHY
-   ═══════════════════════════════════════ */
+/* ─────────────────── PRELOADER ─────────────────── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+}
 
-.text-display {
+.preloader__text-wrap {
+  display: flex;
+  overflow: hidden;
+  gap: 0;
+}
+
+.preloader__char {
   font-family: var(--font-serif);
-  font-size: clamp(3.5rem, 12vw, 14rem);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  line-height: 1;
+  font-weight: 400;
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+}
+
+.preloader__spacer {
+  width: 0.35em;
+}
+
+.preloader__bar {
+  width: 120px;
+  height: 1px;
+  background: var(--color-text-08);
+  position: relative;
+  overflow: hidden;
+}
+
+.preloader__bar-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ─────────────────── SCROLL PROGRESS ─────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 9999;
+  background: transparent;
+}
+
+.scroll-progress__bar {
+  height: 100%;
+  background: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* ─────────────────── LAYOUT ─────────────────── */
+.wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 6rem);
+}
+
+.wrap-full {
+  width: 100%;
+  padding-inline: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* ─────────────────── TYPOGRAPHY ─────────────────── */
+
+/* Giant display — hero/CTA only */
+.t-giant {
+  font-family: var(--font-serif);
+  font-size: clamp(4rem, 14vw, 15rem);
   line-height: 0.85;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
   font-weight: 400;
 }
 
-.text-section {
+/* Display — section heroes */
+.t-display {
   font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 5vw, 5.5rem);
+  font-size: clamp(3rem, 8vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-weight: 400;
+}
+
+/* H1 — major headings */
+.t-h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5.5vw, 6rem);
   line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+
+/* H2 — sub headings */
+.t-h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.5vw, 3.5rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
   font-weight: 400;
 }
 
-.text-sub {
+/* H3 — card titles */
+.t-h3 {
   font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3vw, 3.2rem);
-  line-height: 1.05;
+  font-size: clamp(1.3rem, 2vw, 2rem);
+  line-height: 1.15;
   letter-spacing: -0.01em;
   font-weight: 400;
 }
 
-.text-body-lg {
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  line-height: 1.7;
+/* Body large — lead paragraphs */
+.t-body-lg {
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  line-height: 1.8;
   font-weight: 300;
+  color: var(--color-text-50);
 }
 
-.text-body {
-  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
-  line-height: 1.75;
+/* Body — regular text */
+.t-body {
+  font-size: clamp(0.9rem, 1.05vw, 1.02rem);
+  line-height: 1.8;
   font-weight: 300;
+  color: var(--color-text-50);
 }
 
-.text-label {
-  font-size: 0.75rem;
+/* Label — section markers */
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+/* Caption */
+.t-caption {
+  font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 400;
 }
 
-.text-cap {
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+/* Large number — stats */
+.t-stat {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
   font-weight: 400;
 }
 
-/* ═══════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════ */
+/* ─────────────────── SECTION SPACING ─────────────────── */
+.section-pad {
+  padding-top: clamp(6rem, 12vw, 12rem);
+  padding-bottom: clamp(6rem, 12vw, 12rem);
+}
 
-.container {
+.section-pad-lg {
+  padding-top: clamp(8rem, 16vw, 16rem);
+  padding-bottom: clamp(8rem, 16vw, 16rem);
+}
+
+.section-gap {
+  height: clamp(4rem, 8vw, 8rem);
+}
+
+/* ─────────────────── DIVIDERS ─────────────────── */
+.divider {
   width: 100%;
-  max-width: 1440px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    padding-left: 4rem;
-    padding-right: 4rem;
-  }
-}
-
-/* ═══════════════════════════════════════
-   UTILITIES
-   ═══════════════════════════════════════ */
-
-.text-balance {
-  text-wrap: balance;
-}
-
-.will-anim {
-  will-change: transform, opacity;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
   height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+  background: var(--color-text-08);
 }
 
-/* ═══════════════════════════════════════
-   REDUCED MOTION
-   ═══════════════════════════════════════ */
+/* ─────────────────── IMAGE UTILS ─────────────────── */
+.img-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
+/* ─────────────────── GRADIENTS ─────────────────── */
+.grad-b { background: linear-gradient(to top, var(--color-bg) 0%, transparent 100%); }
+.grad-t { background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 100%); }
+
+/* ─────────────────── MARQUEE ─────────────────── */
+@keyframes marquee-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-slide 45s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ─────────────────── CUSTOM CURSOR ─────────────────── */
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+.cursor-outline {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-text-15);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  transition: border-color 0.3s ease;
+}
+
+/* ─────────────────── SCROLL INDICATOR ─────────────────── */
+@keyframes scrollPulse {
+  0% { top: -30%; }
+  100% { top: 100%; }
+}
+
+.scroll-line {
+  width: 1px;
+  height: 50px;
+  background: var(--color-text-08);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 35%;
+  background: var(--color-accent);
+  animation: scrollPulse 2.2s ease-in-out infinite;
+}
+
+/* ─────────────────── PINNED SECTION HELPERS ─────────────────── */
+.pin-spacer-override {
+  /* Override GSAP's default pinning behavior for cleaner visuals */
+}
+
+/* ─────────────────── STACKED CARDS ─────────────────── */
+.stacked-card {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* ─────────────────── REDUCED MOTION ─────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .marquee-track { animation: none; }
 }

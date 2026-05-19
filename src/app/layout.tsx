@@ -13,7 +13,7 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   display: "swap",
-  weight: ["400"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -29,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="font-sans bg-dark text-light antialiased selection:bg-accent selection:text-dark overflow-x-hidden">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
