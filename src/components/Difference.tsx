@@ -20,88 +20,125 @@ export default function Difference() {
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
-    // Floating shapes
+    // LAYER 1: Floating shapes with organic motion
     gsap.utils.toArray(".diff-float").forEach((shape, i) => {
       gsap.to(shape as Element, {
-        y: `random(-50, 50)`, x: `random(-30, 30)`, rotation: `random(-20, 20)`,
-        duration: `random(5, 9)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.7,
+        y: `random(-60, 60)`, x: `random(-40, 40)`, rotation: `random(-25, 25)`,
+        duration: `random(6, 10)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: (i as number) * 0.8,
       });
     });
 
-    // Header entrance
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 65%" } });
-    headerTl.fromTo(".diff-line", { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power2.inOut", transformOrigin: "left" }, 0);
-    headerTl.fromTo(".diff-label-word", { y: "100%", opacity: 0, rotateX: -45 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.06, duration: 0.9, ease: "power3.out" }, 0.1);
-    headerTl.fromTo(".diff-heading-mask", { yPercent: 130 }, { yPercent: 0, stagger: 0.12, duration: 1.4, ease: "power4.out" }, 0.2);
-    headerTl.fromTo(".diff-intro", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, 0.7);
+    // LAYER 2: Background texture pulse
+    gsap.to(".diff-bg-pulse", {
+      opacity: 0.03,
+      scale: 1.05,
+      duration: 8,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
 
-    // Cards with complex scroll animations
+    // LAYER 3: Header entrance with sequential build
+    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%" } });
+
+    // Line draws with fade
+    headerTl.fromTo(".diff-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+
+    // Label words rise with rotation
+    headerTl.fromTo(".diff-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+
+    // Heading words with dramatic 3D entrance
+    headerTl.fromTo(".diff-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
+
+    // Intro text with blur resolve
+    headerTl.fromTo(".diff-intro", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.8);
+
+    // LAYER 4: Cards with multi-layer scroll animations
     mm.add("(min-width: 768px)", () => {
       const cards = gsap.utils.toArray(".diff-card") as HTMLElement[];
-      cards.forEach((card, i) => {
+      cards.forEach((card, index) => {
         const img = card.querySelector(".diff-card-img") as HTMLElement;
         const content = card.querySelector(".diff-card-content") as HTMLElement;
         const line = card.querySelector(".diff-card-line") as HTMLElement;
         const num = card.querySelector(".diff-card-num") as HTMLElement;
+        const numLarge = card.querySelector(".diff-card-num-large") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 65%", end: "top 25%", scrub: 1.5 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 60%", end: "top 20%", scrub: 1.8 } });
 
-        // Line draws
-        if (line) tl.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "none" }, 0);
+        // Line draws across
+        if (line) tl.fromTo(line, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: "none" }, 0);
 
-        // Number bounces in with rotation
-        if (num) tl.fromTo(num, { scale: 0, opacity: 0, rotate: -30 }, { scale: 1, opacity: 1, rotate: 0, duration: 0.7, ease: "back.out(2.5)" }, 0.1);
+        // Number scales in with rotation
+        if (num) tl.fromTo(num, { scale: 0, opacity: 0, rotate: -45 }, { scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: "back.out(3)" }, 0.15);
 
-        // Image reveals with clip-path + scale + blur
+        // Large background number fades in
+        if (numLarge) tl.fromTo(numLarge, { opacity: 0, scale: 0.8, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.8 }, 0.2);
+
+        // Image reveal with clip-path and blur
         if (img) {
           tl.fromTo(img,
-            { clipPath: "inset(100% 0 0 0)", scale: 1.25, filter: "blur(10px)" },
-            { clipPath: "inset(0% 0 0 0)", scale: 1, filter: "blur(0px)", duration: 1.6, ease: "power4.inOut" },
-            0.15
+            { clipPath: "inset(100% 0 0 0)", scale: 1.3, filter: "blur(12px)" },
+            { clipPath: "inset(0% 0 0 0)", scale: 1, filter: "blur(0px)", duration: 1.8, ease: "power4.inOut" },
+            0.2
           );
         }
 
-        // Content slides up with stagger
+        // Content children stagger in
         if (content) {
           tl.fromTo(content.children,
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: "power3.out" },
-            0.5
+            { y: 45, opacity: 0, filter: "blur(4px)" },
+            { y: 0, opacity: 1, filter: "blur(0px)", stagger: 0.12, duration: 0.9, ease: "power3.out" },
+            0.6
           );
         }
 
         // Parallax on image
         if (img) {
           gsap.to(img.querySelector("div"), {
-            yPercent: -18, ease: "none",
+            yPercent: -20, ease: "none",
             scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true },
           });
         }
 
-        // Card hover effect
-        card.addEventListener("mouseenter", () => {
-          gsap.to(img, { scale: 1.03, duration: 0.6, ease: "power2.out" });
+        // 3D tilt on hover
+        card.addEventListener("mousemove", (e: MouseEvent) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = (y - centerY) / centerY * -2.5;
+          const rotateY = (x - centerX) / centerX * 2.5;
+
+          gsap.to(card, { rotateX, rotateY, duration: 0.5, ease: "power2.out", transformPerspective: 1200 });
+          if (img) gsap.to(img, { scale: 1.04, duration: 0.7, ease: "power2.out" });
         });
         card.addEventListener("mouseleave", () => {
-          gsap.to(img, { scale: 1, duration: 0.6, ease: "power2.out" });
+          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: "power2.out" });
+          if (img) gsap.to(img, { scale: 1, duration: 0.7, ease: "power2.out" });
         });
       });
     });
 
     mm.add("(max-width: 767px)", () => {
-      gsap.fromTo(".diff-card", { y: 60, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.2, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".diff-cards", start: "top 70%" } });
+      gsap.fromTo(".diff-card", { y: 80, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.25, duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: ".diff-cards", start: "top 65%" } });
     });
   }, { scope: section });
 
   return (
     <section id="about" ref={section} className="relative bg-bg overflow-hidden" style={{ paddingTop: "clamp(10rem, 18vw, 20rem)", paddingBottom: "clamp(10rem, 18vw, 20rem)" }}>
       <div className="divider" />
-      {/* Floating shapes */}
+
+      {/* LAYER 0: Background pulse */}
+      <div className="diff-bg-pulse absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%, var(--color-accent-dim) 0%, transparent 60%)", opacity: 0, transform: "scale(1)" }} />
+
+      {/* LAYER 1: Floating shapes */}
       <div className="diff-float absolute top-[12%] right-[6%] w-28 h-28 rounded-full border border-accent/10 pointer-events-none" />
       <div className="diff-float absolute bottom-[18%] left-[8%] w-20 h-20 rounded-full bg-accent-dim pointer-events-none" />
       <div className="diff-float absolute top-[45%] right-[15%] w-16 h-16 rounded-full border border-text/10 pointer-events-none" />
 
       <div className="wrap">
+        {/* LAYER 3: Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(4rem, 8vw, 8rem)", marginBottom: "clamp(8rem, 16vw, 16rem)" }}>
           <div className="lg:col-span-3">
             <div className="diff-line w-14 h-[1px] bg-accent origin-left" style={{ marginBottom: "clamp(2.5rem, 5vw, 4rem)" }} />
@@ -118,20 +155,21 @@ export default function Difference() {
           </div>
         </div>
 
+        {/* LAYER 4: Cards */}
         <div className="diff-cards space-y-0">
           {features.map((f, i) => (
-            <div key={i} className="diff-card grid grid-cols-1 md:grid-cols-12" style={{ gap: "clamp(3rem, 6vw, 6rem)" }}>
+            <div key={i} className="diff-card grid grid-cols-1 md:grid-cols-12 cursor-default" style={{ gap: "clamp(3rem, 6vw, 6rem)", transformStyle: "preserve-3d", perspective: "1200px" }}>
               <div className="md:col-span-12"><div className="diff-card-line w-full h-[1px] bg-text-08 origin-left" /></div>
               <div className={`md:col-span-6 ${i % 2 === 1 ? "md:order-2 md:col-start-7" : ""}`}>
-                <div className="diff-card-img relative w-full aspect-[4/3] overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center will-change-transform" style={{ backgroundImage: `url(${f.img})`, height: "120%", top: "-10%" }} />
+                <div className="diff-card-img relative w-full aspect-[4/3] overflow-hidden rounded-lg">
+                  <div className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ backgroundImage: `url(${f.img})`, height: "120%", top: "-10%" }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-bg/40 to-transparent" />
-                  <span className="diff-card-num absolute top-8 left-8 font-serif text-7xl md:text-8xl text-text/[0.06] leading-none select-none">{f.num}</span>
+                  <span className="diff-card-num-large absolute bottom-6 right-8 font-serif text-[5rem] md:text-[7rem] text-text/[0.04] leading-none select-none">{f.num}</span>
                 </div>
               </div>
               <div className={`md:col-span-5 flex flex-col justify-center ${i % 2 === 1 ? "md:order-1 md:col-start-1" : "md:col-start-8"}`}>
                 <div className="diff-card-content">
-                  <span className="t-label text-accent block" style={{ marginBottom: "clamp(2rem, 4vw, 3.5rem)" }}>{f.num}</span>
+                  <span className="diff-card-num t-label text-accent block" style={{ marginBottom: "clamp(2rem, 4vw, 3.5rem)" }}>{f.num}</span>
                   <h3 className="t-h3 text-text" style={{ marginBottom: "clamp(2rem, 4vw, 3.5rem)" }}>{f.title}</h3>
                   <p className="t-body max-w-sm">{f.desc}</p>
                 </div>

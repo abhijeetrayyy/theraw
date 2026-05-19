@@ -68,6 +68,16 @@ export default function Nav({ loaded }: { loaded: boolean }) {
     );
   }, [loaded]);
 
+  // Smooth scroll
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+    if (menuOpen) setMenuOpen(false);
+  };
+
   return (
     <>
       <header
@@ -94,9 +104,9 @@ export default function Nav({ loaded }: { loaded: boolean }) {
 
         <div className="wrap relative z-10 flex items-center justify-between" style={{ paddingTop: scrolled ? "clamp(0.75rem, 2vw, 1rem)" : "clamp(1.25rem, 3vw, 1.75rem)", paddingBottom: scrolled ? "clamp(0.75rem, 2vw, 1rem)" : "clamp(1.25rem, 3vw, 1.75rem)" }}>
           {/* Logo */}
-          <a href="#hero" className="group flex items-center gap-2">
-            <span className="font-serif text-xl tracking-tight text-text transition-colors duration-300">
-              raw<span className="text-accent">.</span>
+          <a href="#hero" onClick={(e) => handleNavClick(e, "#hero")} className="group flex items-center gap-2">
+            <span className="font-serif text-xl tracking-tight text-text transition-colors duration-300 group-hover:text-accent">
+              raw<span className="text-accent group-hover:text-text transition-colors duration-300">.</span>
             </span>
             <span className="hidden sm:inline-block t-label text-text-30 group-hover:text-text transition-colors duration-300">select</span>
           </a>
@@ -107,6 +117,7 @@ export default function Nav({ loaded }: { loaded: boolean }) {
               <a
                 key={l.label}
                 href={l.href}
+                onClick={(e) => handleNavClick(e, l.href)}
                 className={`relative text-sm font-medium transition-colors duration-400 group ${activeSection === l.id ? "text-text" : "text-text-50 hover:text-text"}`}
               >
                 {l.label}
@@ -117,7 +128,7 @@ export default function Nav({ loaded }: { loaded: boolean }) {
 
           {/* CTA */}
           <a
-            href="#contact"
+            href="/contact"
             className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-text transition-colors duration-400 group"
           >
             <span>Get in touch</span>
@@ -163,7 +174,7 @@ export default function Nav({ loaded }: { loaded: boolean }) {
               <a
                 key={l.label}
                 href={l.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, l.href)}
                 className="menu-link block font-serif text-4xl text-text-50 hover:text-text transition-colors duration-300 py-3"
               >
                 {l.label}
@@ -176,8 +187,8 @@ export default function Nav({ loaded }: { loaded: boolean }) {
 
           {/* CTA */}
           <a
-            href="#contact"
-            onClick={() => setMenuOpen(false)}
+            href="/contact"
+            onClick={(e) => handleNavClick(e, "/contact")}
             className="menu-cta inline-flex items-center gap-3 text-lg font-medium text-accent"
           >
             <span>Get in touch</span>
