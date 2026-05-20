@@ -43,13 +43,12 @@ export default function Projects() {
       ease: "sine.inOut",
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
-    headerTl.fromTo(".proj-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
-    headerTl.fromTo(".proj-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
-    headerTl.fromTo(".proj-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
-    headerTl.fromTo(".proj-sub", { y: 35, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.8);
-
     mm.add("(min-width: 1024px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
+      headerTl.fromTo(".proj-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+      headerTl.fromTo(".proj-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+      headerTl.fromTo(".proj-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
+      headerTl.fromTo(".proj-sub", { y: 35, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.8);
       headerTl.fromTo(".proj-accent-img-1",
         { clipPath: "inset(0 100% 0 0)", scale: 1.15, filter: "blur(8px)" },
         { clipPath: "inset(0 0% 0 0)", scale: 1, filter: "blur(0px)", duration: 1.6, ease: "power3.inOut" },
@@ -151,12 +150,16 @@ export default function Projects() {
     });
 
       mm.add("(max-width: 1023px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
+      headerTl.fromTo(".proj-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+      headerTl.fromTo(".proj-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+      headerTl.fromTo(".proj-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
+      headerTl.fromTo(".proj-sub", { y: 35, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.8);
       headerTl.fromTo(".proj-hero-img",
         { clipPath: "circle(0% at 50% 50%)", scale: 0.9, opacity: 0 },
         { clipPath: "circle(100% at 50% 50%)", scale: 1, opacity: 1, duration: 1.6, ease: "power3.out" },
         0.4
       );
-
       headerTl.fromTo(".proj-accent-img-1",
         { y: 30, opacity: 0, scale: 0.8 },
         { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" },

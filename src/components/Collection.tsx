@@ -44,13 +44,13 @@ export default function Collection() {
       gsap.to(p as Element, { y: `random(-70, 70)`, x: `random(-50, 50)`, opacity: `random(0.1, 0.4)`, duration: `random(5, 8)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: (i as number) * 0.5 });
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%", end: "top 15%", scrub: 1.5 } });
-    headerTl.fromTo(".coll-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
-    headerTl.fromTo(".coll-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
-    headerTl.fromTo(".coll-heading-word", { y: "140%", opacity: 0, rotateX: -30 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.12, duration: 1.6, ease: "power4.out" }, 0.25);
-    headerTl.fromTo(".coll-sub", { y: 30, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.8);
-
     mm.add("(min-width: 1024px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%", end: "top 15%", scrub: 1.5 } });
+      headerTl.fromTo(".coll-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+      headerTl.fromTo(".coll-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+      headerTl.fromTo(".coll-heading-word", { y: "140%", opacity: 0, rotateX: -30 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.12, duration: 1.6, ease: "power4.out" }, 0.25);
+      headerTl.fromTo(".coll-sub", { y: 30, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.8);
+
       const el = track.current;
       if (!el) return;
       const cards = el.querySelectorAll(".coll-card");
@@ -130,6 +130,12 @@ export default function Collection() {
     });
 
     mm.add("(max-width: 1023px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%", end: "top 15%", scrub: 1.5 } });
+      headerTl.fromTo(".coll-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+      headerTl.fromTo(".coll-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+      headerTl.fromTo(".coll-heading-word", { y: "140%", opacity: 0, rotateX: -30 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.12, duration: 1.6, ease: "power4.out" }, 0.25);
+      headerTl.fromTo(".coll-sub", { y: 30, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.8);
+
       gsap.utils.toArray(".coll-mobile-particle").forEach((p, i) => {
         gsap.to(p as Element, { y: `random(-30, 30)`, x: `random(-20, 20)`, opacity: `random(0.15, 0.35)`, duration: `random(4, 7)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: (i as number) * 0.4 });
       });

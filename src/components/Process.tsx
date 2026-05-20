@@ -57,16 +57,21 @@ export default function Process() {
       ease: "sine.inOut",
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
-    headerTl.fromTo(".proc-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0);
-    headerTl.fromTo(".proc-heading-mask", { yPercent: 130, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.6, ease: "power4.out", stagger: 0.14 }, 0.15);
-    headerTl.fromTo(".proc-sub", { y: 40, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.7);
-
     mm.add("(min-width: 1024px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
+      headerTl.fromTo(".proc-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0);
+      headerTl.fromTo(".proc-heading-mask", { yPercent: 130, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.6, ease: "power4.out", stagger: 0.14 }, 0.15);
+      headerTl.fromTo(".proc-sub", { y: 40, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.7);
+
       gsap.fromTo(".proc-timeline", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, ease: "none", scrollTrigger: { trigger: ".proc-steps", start: "top 50%", end: "bottom 40%", scrub: true } });
     });
 
     mm.add("(max-width: 1023px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
+      headerTl.fromTo(".proc-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0);
+      headerTl.fromTo(".proc-heading-mask", { yPercent: 130, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.6, ease: "power4.out", stagger: 0.14 }, 0.15);
+      headerTl.fromTo(".proc-sub", { y: 40, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.7);
+
       gsap.fromTo(".proc-timeline-mobile", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, ease: "none", scrollTrigger: { trigger: ".proc-steps", start: "top 50%", end: "bottom 40%", scrub: true } });
 
       // Mobile dot pulse animation for active step

@@ -42,17 +42,13 @@ export default function Difference() {
       ease: "sine.inOut",
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
-
-    headerTl.fromTo(".diff-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
-
-    headerTl.fromTo(".diff-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
-
-    headerTl.fromTo(".diff-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
-
-    headerTl.fromTo(".diff-intro", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.8);
-
     mm.add("(min-width: 1024px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
+      headerTl.fromTo(".diff-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+      headerTl.fromTo(".diff-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+      headerTl.fromTo(".diff-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
+      headerTl.fromTo(".diff-intro", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.8);
+
       const cards = gsap.utils.toArray(".diff-card") as HTMLElement[];
       cards.forEach((card, index) => {
         const img = card.querySelector(".diff-card-img") as HTMLElement;
@@ -110,6 +106,12 @@ export default function Difference() {
     });
 
     mm.add("(max-width: 1023px)", () => {
+      const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
+      headerTl.fromTo(".diff-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
+      headerTl.fromTo(".diff-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
+      headerTl.fromTo(".diff-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
+      headerTl.fromTo(".diff-intro", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.8);
+
       const cards = gsap.utils.toArray(".diff-card") as HTMLElement[];
       cards.forEach((card) => {
         const img = card.querySelector(".diff-card-img") as HTMLElement;
