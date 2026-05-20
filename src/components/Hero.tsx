@@ -226,9 +226,10 @@ export default function Hero() {
         },
       });
 
-      tl.to(".hero-entrance-title-word", { y: -70, opacity: 0, stagger: 0.06, duration: 0.18, ease: "power2.in" }, 0);
-      tl.to(".hero-entrance-label, .hero-entrance-line, .hero-entrance-subtitle, .hero-entrance-scroll", { opacity: 0, y: -35, duration: 0.14 }, 0);
-      tl.to(".hero-entrance-img", { scale: 1.12, clipPath: "inset(0 0 0 50%)", filter: "brightness(0.85)", duration: 0.32 }, 0);
+      // Scene 1 exit -> Scene 2 enter
+      tl.fromTo(".hero-entrance-title-word", { y: 0, opacity: 1 }, { y: -70, opacity: 0, stagger: 0.06, duration: 0.18, ease: "power2.in" }, 0);
+      tl.fromTo(".hero-entrance-label, .hero-entrance-line, .hero-entrance-subtitle, .hero-entrance-scroll", { y: 0, opacity: 1 }, { opacity: 0, y: -35, duration: 0.14 }, 0);
+      tl.fromTo(".hero-entrance-img", { scale: 1, clipPath: "circle(75% at 50% 50%)", filter: "blur(0px) brightness(1)" }, { scale: 1.12, clipPath: "inset(0 0 0 50%)", filter: "brightness(0.85)", duration: 0.32 }, 0);
 
       tl.fromTo(".hero-s2-img-1-m", { y: "100%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }, 0.05);
       tl.fromTo(".hero-s2-img-2-m", { y: "100%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }, 0.15);
@@ -236,10 +237,11 @@ export default function Hero() {
 
       tl.fromTo(".hero-s2-text-m", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25 }, 0.35);
 
-      tl.to(".hero-s2-img-1-m", { y: "-8%", scale: 0.9, opacity: 0.6, duration: 0.2 }, 0.5);
-      tl.to(".hero-s2-img-2-m", { y: "-4%", scale: 0.9, opacity: 0.6, duration: 0.2 }, 0.5);
-      tl.to(".hero-s2-img-3-m", { y: "-8%", scale: 0.9, opacity: 0.6, duration: 0.2 }, 0.5);
-      tl.to(".hero-s2-text-m", { opacity: 0, y: -25, duration: 0.15 }, 0.5);
+      // Scene 2 exit -> Scene 3 enter
+      tl.fromTo(".hero-s2-img-1-m", { y: "0%", opacity: 1, scale: 1 }, { y: "-8%", scale: 0.9, opacity: 0.6, duration: 0.2 }, 0.5);
+      tl.fromTo(".hero-s2-img-2-m", { y: "0%", opacity: 1, scale: 1 }, { y: "-4%", scale: 0.9, opacity: 0.6, duration: 0.2 }, 0.5);
+      tl.fromTo(".hero-s2-img-3-m", { y: "0%", opacity: 1, scale: 1 }, { y: "-8%", scale: 0.9, opacity: 0.6, duration: 0.2 }, 0.5);
+      tl.fromTo(".hero-s2-text-m", { y: 0, opacity: 1 }, { opacity: 0, y: -25, duration: 0.15 }, 0.5);
 
       tl.fromTo(".hero-s3-img-m", { clipPath: "inset(0 100% 0 0)", scale: 1.2 }, { clipPath: "inset(0 0% 0 0)", scale: 1, duration: 0.35, ease: "power3.inOut" }, 0.55);
       tl.fromTo(".hero-s3-accent-m", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.2 }, 0.65);
@@ -249,8 +251,9 @@ export default function Hero() {
       tl.fromTo(".hero-s3-stat-m", { y: 20, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, stagger: 0.1, duration: 0.2 }, 0.95);
       tl.fromTo(".hero-s3-float-m", { opacity: 0, scale: 0.5, rotation: -45 }, { opacity: 1, scale: 1, rotation: 0, stagger: 0.12, duration: 0.2 }, 0.8);
 
-      tl.to(".hero-s3-img-m", { clipPath: "inset(0 0 100% 0)", duration: 0.25 }, 1.15);
-      tl.to(".hero-s3-label-m, .hero-s3-heading-word-m, .hero-s3-body-m, .hero-s3-accent-m, .hero-s3-stat-m, .hero-s3-float-m", { y: -40, opacity: 0, duration: 0.15 }, 1.15);
+      // Scene 3 exit -> Scene 4 enter
+      tl.fromTo(".hero-s3-img-m", { clipPath: "inset(0 0% 0 0)", scale: 1 }, { clipPath: "inset(0 0 100% 0)", duration: 0.25 }, 1.15);
+      tl.fromTo(".hero-s3-label-m, .hero-s3-heading-word-m, .hero-s3-body-m, .hero-s3-accent-m, .hero-s3-stat-m, .hero-s3-float-m", { y: 0, opacity: 1 }, { y: -40, opacity: 0, duration: 0.15 }, 1.15);
 
       tl.fromTo(".hero-s4-bg-m", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.2);
       tl.fromTo(".hero-s4-gradient-sweep-m", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "power2.inOut" }, 1.25);
