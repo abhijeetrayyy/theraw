@@ -47,7 +47,7 @@ export default function Philosophy() {
     return () => observer.disconnect();
   }, []);
 
-  useGSAP(() => {
+    useGSAP(() => {
     const mm = gsap.matchMedia();
 
     gsap.utils.toArray(".phil-float").forEach((shape, i) => {
@@ -107,10 +107,33 @@ export default function Philosophy() {
 
     tl.fromTo(".phil-quote-mark", { scale: 0, opacity: 0, rotation: -90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.8, ease: "back.out(3)" }, 0.8);
 
+    // Section exit animation
+    gsap.to(".phil-content", {
+      opacity: 0.3,
+      y: -40,
+      ease: "none",
+      scrollTrigger: { trigger: ".phil-content", start: "bottom 30%", end: "bottom top", scrub: true },
+    });
+
     mm.add("(min-width: 1024px)", () => {
       gsap.to(".phil-quote", {
         y: -60, ease: "none",
         scrollTrigger: { trigger: ".phil-quote", start: "top bottom", end: "bottom top", scrub: true },
+      });
+
+      // Stat card hover enhancements
+      gsap.utils.toArray(".stat-card").forEach((card) => {
+        const el = card as HTMLElement;
+        el.addEventListener("mouseenter", () => {
+          gsap.to(el, { y: -10, boxShadow: "0 25px 50px rgba(0,0,0,0.06)", duration: 0.5, ease: "power2.out" });
+          gsap.to(el.querySelector(".stat-num"), { color: "var(--color-accent)", scale: 1.05, duration: 0.4 });
+          gsap.to(el.querySelector(".stat-glow"), { opacity: 1, scale: 1, duration: 0.5 });
+        });
+        el.addEventListener("mouseleave", () => {
+          gsap.to(el, { y: 0, boxShadow: "none", duration: 0.5, ease: "power2.out" });
+          gsap.to(el.querySelector(".stat-num"), { color: "var(--color-text)", scale: 1, duration: 0.4 });
+          gsap.to(el.querySelector(".stat-glow"), { opacity: 0, scale: 0.8, duration: 0.5 });
+        });
       });
     });
 
@@ -148,6 +171,7 @@ export default function Philosophy() {
       });
     });
 
+    // Enhanced stat count-up with easing
     const statEls = section.current?.querySelectorAll(".stat-num");
     statEls?.forEach((el, i) => {
       const target = stats[i]?.value || 0;
@@ -163,22 +187,6 @@ export default function Philosophy() {
       { y: 120, opacity: 0, rotateX: 20, scale: 0.85 },
       { y: 0, opacity: 1, rotateX: 0, scale: 1, stagger: 0.25, duration: 1.6, ease: "power3.out", scrollTrigger: { trigger: ".phil-stats", start: "top 65%", end: "top 35%", scrub: 1.5 } }
     );
-
-    mm.add("(min-width: 1024px)", () => {
-      gsap.utils.toArray(".stat-card").forEach((card) => {
-        const el = card as HTMLElement;
-        el.addEventListener("mouseenter", () => {
-          gsap.to(el, { y: -10, boxShadow: "0 25px 50px rgba(0,0,0,0.06)", duration: 0.5, ease: "power2.out" });
-          gsap.to(el.querySelector(".stat-num"), { color: "var(--color-accent)", duration: 0.4 });
-          gsap.to(el.querySelector(".stat-glow"), { opacity: 1, scale: 1, duration: 0.5 });
-        });
-        el.addEventListener("mouseleave", () => {
-          gsap.to(el, { y: 0, boxShadow: "none", duration: 0.5, ease: "power2.out" });
-          gsap.to(el.querySelector(".stat-num"), { color: "var(--color-text)", duration: 0.4 });
-          gsap.to(el.querySelector(".stat-glow"), { opacity: 0, scale: 0.8, duration: 0.5 });
-        });
-      });
-    });
 
     if (imgRef2.current) {
       const tl2 = gsap.timeline({ scrollTrigger: { trigger: imgRef2.current, start: "top 65%", end: "top 25%", scrub: 1.5 } });

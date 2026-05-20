@@ -80,25 +80,25 @@ export default function Hero() {
       });
     });
 
-    // Cinematic entrance
+    // Cinematic entrance — enhanced
     const entranceTl = gsap.timeline({ delay: 2.2 });
 
     entranceTl.fromTo(".hero-entrance-img",
-      { clipPath: "circle(0% at 50% 50%)", scale: 1.5, filter: "blur(50px) brightness(0.2)" },
-      { clipPath: "circle(75% at 50% 50%)", scale: 1, filter: "blur(0px) brightness(1)", duration: 3.5, ease: "power4.inOut" }, 0
+      { clipPath: "polygon(0 100%, 100% 100%, 100% 100%)", scale: 1.15, filter: "blur(30px) brightness(0.3)" },
+      { clipPath: "polygon(0 100%, 100% 100%, 100% 0, 0 0)", scale: 1, filter: "blur(0px) brightness(1)", duration: 3.5, ease: "power4.inOut" }, 0
     );
 
     entranceTl.fromTo(".hero-entrance-overlay", { opacity: 0 }, { opacity: 1, duration: 3 }, 0.5);
 
     entranceTl.fromTo(".hero-grain", { opacity: 0 }, { opacity: 0.035, duration: 2.5 }, 0.8);
 
-    entranceTl.fromTo(".hero-entrance-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6, ease: "power3.inOut" }, 1);
+    entranceTl.fromTo(".hero-entrance-line", { scaleX: 0, opacity: 0, transformOrigin: "center" }, { scaleX: 1, opacity: 1, duration: 1.6, ease: "power3.inOut" }, 1);
 
     entranceTl.fromTo(".hero-entrance-label", { y: 50, opacity: 0, letterSpacing: "0.6em" }, { y: 0, opacity: 1, letterSpacing: "0.35em", duration: 1.2, ease: "power3.out" }, 1.3);
 
-    entranceTl.fromTo(".hero-entrance-title-word",
-      { y: 140, opacity: 0, rotateX: -50, skewY: 10 },
-      { y: 0, opacity: 1, rotateX: 0, skewY: 0, stagger: 0.14, duration: 2, ease: "power4.out" }, 1.5
+    entranceTl.fromTo(".hero-entrance-title-letter",
+      { y: 120, opacity: 0, rotateX: -60, skewY: 8 },
+      { y: 0, opacity: 1, rotateX: 0, skewY: 0, stagger: 0.035, duration: 1.8, ease: "power4.out" }, 1.5
     );
 
     entranceTl.fromTo(".hero-entrance-subtitle",
@@ -120,10 +120,12 @@ export default function Hero() {
         },
       });
 
-      tl.to(".hero-entrance-title-word", { y: -100, opacity: 0, stagger: 0.05, duration: 0.15, ease: "power2.in" }, 0);
-      tl.to(".hero-entrance-label, .hero-entrance-line, .hero-entrance-subtitle, .hero-entrance-scroll", { opacity: 0, y: -50, duration: 0.12 }, 0);
-      tl.to(".hero-entrance-img", { scale: 1.2, clipPath: "inset(0 0 0 45%)", filter: "brightness(0.8) contrast(1.1)", duration: 0.28 }, 0);
+      // Scene 1 exit
+      tl.fromTo(".hero-entrance-title-letter", { y: 0, opacity: 1 }, { y: -80, opacity: 0, stagger: 0.03, duration: 0.12, ease: "power2.in" }, 0);
+      tl.fromTo(".hero-entrance-label, .hero-entrance-line, .hero-entrance-subtitle, .hero-entrance-scroll", { y: 0, opacity: 1 }, { opacity: 0, y: -50, duration: 0.12 }, 0);
+      tl.fromTo(".hero-entrance-img", { clipPath: "polygon(0 100%, 100% 100%, 100% 0, 0 0)", scale: 1 }, { scale: 1.2, clipPath: "inset(0 0 0 45%)", filter: "brightness(0.8) contrast(1.1)", duration: 0.28 }, 0);
 
+      // Scene 2 enter — staggered clip-path from different directions
       tl.fromTo(".hero-s2-img-1", { x: "-130%", opacity: 0, rotateY: 25, filter: "blur(12px)" }, { x: "0%", opacity: 1, rotateY: 0, filter: "blur(0px)", duration: 0.22, ease: "power3.out" }, 0.05);
       tl.fromTo(".hero-s2-img-2", { y: "130%", opacity: 0, scale: 0.6, filter: "blur(12px)" }, { y: "0%", opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.22, ease: "power3.out" }, 0.1);
       tl.fromTo(".hero-s2-img-3", { x: "130%", opacity: 0, rotateY: -25, filter: "blur(12px)" }, { x: "0%", opacity: 1, rotateY: 0, filter: "blur(0px)", duration: 0.22, ease: "power3.out" }, 0.15);
@@ -133,11 +135,13 @@ export default function Hero() {
 
       tl.fromTo(".hero-s2-text", { y: 60, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.18 }, 0.32);
 
-      tl.to(".hero-s2-img-1", { x: "-18%", scale: 0.88, opacity: 0.55, duration: 0.22 }, 0.42);
-      tl.to(".hero-s2-img-2", { y: "-12%", scale: 0.88, opacity: 0.55, duration: 0.22 }, 0.42);
-      tl.to(".hero-s2-img-3", { x: "18%", scale: 0.88, opacity: 0.55, duration: 0.22 }, 0.42);
-      tl.to(".hero-s2-text, .hero-s2-connector, .hero-s2-accent-mark", { opacity: 0, y: -40, duration: 0.14 }, 0.42);
+      // Scene 2 exit — fragmentation
+      tl.fromTo(".hero-s2-img-1", { x: "0%", opacity: 1, scale: 1 }, { x: "-18%", scale: 0.88, opacity: 0.55, duration: 0.22 }, 0.42);
+      tl.fromTo(".hero-s2-img-2", { y: "0%", opacity: 1, scale: 1 }, { y: "-12%", scale: 0.88, opacity: 0.55, duration: 0.22 }, 0.42);
+      tl.fromTo(".hero-s2-img-3", { x: "0%", opacity: 1, scale: 1 }, { x: "18%", scale: 0.88, opacity: 0.55, duration: 0.22 }, 0.42);
+      tl.fromTo(".hero-s2-text, .hero-s2-connector, .hero-s2-accent-mark", { y: 0, opacity: 1 }, { opacity: 0, y: -40, duration: 0.14 }, 0.42);
 
+      // Scene 3 enter
       tl.fromTo(".hero-s3-img", { clipPath: "inset(0 100% 0 0)", scale: 1.35, filter: "blur(14px)" }, { clipPath: "inset(0 0% 0 0)", scale: 1, filter: "blur(0px)", duration: 0.28, ease: "power3.inOut" }, 0.48);
 
       tl.fromTo(".hero-s3-float", { opacity: 0, scale: 0.4, rotation: -60 }, { opacity: 1, scale: 1, rotation: 0, stagger: 0.1, duration: 0.18 }, 0.55);
@@ -149,18 +153,22 @@ export default function Hero() {
       tl.fromTo(".hero-s3-body", { y: 35, opacity: 0, filter: "blur(5px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.14 }, 0.85);
       tl.fromTo(".hero-s3-stat", { y: 30, opacity: 0, scale: 0.8 }, { y: 0, opacity: 1, scale: 1, stagger: 0.08, duration: 0.14 }, 0.9);
 
-      tl.to(".hero-s3-img", { clipPath: "inset(0 0 100% 0)", duration: 0.2 }, 1);
-      tl.to(".hero-s3-label, .hero-s3-heading-word, .hero-s3-body, .hero-s3-accent, .hero-s3-stat, .hero-s3-img-accent, .hero-s3-float", { y: -60, opacity: 0, duration: 0.14 }, 1);
+      // Scene 3 exit
+      tl.fromTo(".hero-s3-img", { clipPath: "inset(0 0% 0 0)", scale: 1 }, { clipPath: "inset(0 0 100% 0)", duration: 0.2 }, 1);
+      tl.fromTo(".hero-s3-label, .hero-s3-heading-word, .hero-s3-body, .hero-s3-accent, .hero-s3-stat, .hero-s3-img-accent, .hero-s3-float", { y: 0, opacity: 1 }, { y: -60, opacity: 0, duration: 0.14 }, 1);
 
+      // Scene 4 enter
       tl.fromTo(".hero-s4-bg", { opacity: 0 }, { opacity: 1, duration: 0.14 }, 1.05);
       tl.fromTo(".hero-s4-gradient-sweep", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.25, ease: "power2.inOut" }, 1.08);
       tl.fromTo(".hero-s4-particles", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, stagger: 0.06, duration: 0.12 }, 1.12);
 
-      tl.fromTo(".hero-s4-line", { scaleX: 0 }, { scaleX: 1, duration: 0.18, ease: "power2.inOut" }, 1.16);
+      tl.fromTo(".hero-s4-line", { scaleX: 0, transformOrigin: "center" }, { scaleX: 1, duration: 0.18, ease: "power2.inOut" }, 1.16);
       tl.fromTo(".hero-s4-word", { y: "140%", opacity: 0, rotateX: -45 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 0.2, ease: "power4.out" }, 1.22);
       tl.fromTo(".hero-s4-sub", { y: 30, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.14 }, 1.35);
       tl.fromTo(".hero-s4-cta", { y: 30, opacity: 0, scale: 0.85 }, { y: 0, opacity: 1, scale: 1, duration: 0.14 }, 1.4);
+      tl.fromTo(".hero-s4-pulse-ring", { scale: 0.8, opacity: 0.3 }, { scale: 1.5, opacity: 0, duration: 2, repeat: -1, ease: "power2.out" }, 1.4);
 
+      // Mouse parallax on scene 2 images
       gsap.utils.toArray(".hero-s2-img-1, .hero-s2-img-2, .hero-s2-img-3").forEach((img, i) => {
         const depth = (i + 1) * 18;
         gsap.to(img as Element, {
@@ -171,6 +179,7 @@ export default function Hero() {
         });
       });
 
+      // Magnetic title
       gsap.utils.toArray(".hero-entrance-title").forEach((title) => {
         const el = title as HTMLElement;
         el.addEventListener("mousemove", (e: MouseEvent) => {
@@ -184,6 +193,7 @@ export default function Hero() {
         });
       });
 
+      // Magnetic CTA button
       const ctaBtn = document.querySelector(".hero-s4-cta") as HTMLElement;
       if (ctaBtn) {
         ctaBtn.addEventListener("mousemove", (e: MouseEvent) => {
@@ -227,9 +237,9 @@ export default function Hero() {
       });
 
       // Scene 1 exit -> Scene 2 enter
-      tl.fromTo(".hero-entrance-title-word", { y: 0, opacity: 1 }, { y: -70, opacity: 0, stagger: 0.06, duration: 0.18, ease: "power2.in" }, 0);
+      tl.fromTo(".hero-entrance-title-letter", { y: 0, opacity: 1 }, { y: -70, opacity: 0, stagger: 0.03, duration: 0.15, ease: "power2.in" }, 0);
       tl.fromTo(".hero-entrance-label, .hero-entrance-line, .hero-entrance-subtitle, .hero-entrance-scroll", { y: 0, opacity: 1 }, { opacity: 0, y: -35, duration: 0.14 }, 0);
-      tl.fromTo(".hero-entrance-img", { scale: 1, clipPath: "circle(75% at 50% 50%)", filter: "blur(0px) brightness(1)" }, { scale: 1.12, clipPath: "inset(0 0 0 50%)", filter: "brightness(0.85)", duration: 0.32 }, 0);
+      tl.fromTo(".hero-entrance-img", { scale: 1, clipPath: "polygon(0 100%, 100% 100%, 100% 0, 0 0)", filter: "blur(0px) brightness(1)" }, { scale: 1.12, clipPath: "inset(0 0 0 50%)", filter: "brightness(0.85)", duration: 0.32 }, 0);
 
       tl.fromTo(".hero-s2-img-1-m", { y: "100%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }, 0.05);
       tl.fromTo(".hero-s2-img-2-m", { y: "100%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }, 0.15);
@@ -257,7 +267,7 @@ export default function Hero() {
 
       tl.fromTo(".hero-s4-bg-m", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.2);
       tl.fromTo(".hero-s4-gradient-sweep-m", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "power2.inOut" }, 1.25);
-      tl.fromTo(".hero-s4-line-m", { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "power2.inOut" }, 1.3);
+      tl.fromTo(".hero-s4-line-m", { scaleX: 0, transformOrigin: "center" }, { scaleX: 1, duration: 0.2, ease: "power2.inOut" }, 1.3);
       tl.fromTo(".hero-s4-word-m", { y: "100%", opacity: 0, rotateX: -30 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.1, duration: 0.25, ease: "power4.out" }, 1.35);
       tl.fromTo(".hero-s4-sub-m", { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2 }, 1.5);
       tl.fromTo(".hero-s4-cta-m", { y: 25, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.2 }, 1.55);
@@ -318,9 +328,9 @@ export default function Hero() {
             <div className="hero-entrance-line w-20 h-[1px] bg-accent mx-auto" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)", transform: "scaleX(0)", opacity: 0 }} />
             <p className="hero-entrance-label t-label text-accent tracking-[0.35em]" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)", opacity: 0 }}>Curated Materials & Design</p>
             <h1 className="hero-entrance-title t-giant text-text" style={{ overflow: "visible" }}>
-              {"The Raw Select".split(" ").map((w, i) => (
-                <span key={i} className="hero-entrance-title-word inline-block mr-[0.25em]" style={{ opacity: 0 }}>
-                  {w}
+              {"The Raw Select".split("").map((l, i) => (
+                <span key={i} className="hero-entrance-title-letter inline-block" style={{ opacity: 0 }}>
+                  {l === " " ? "\u00A0" : l}
                 </span>
               ))}
             </h1>
@@ -499,6 +509,9 @@ export default function Hero() {
               <div key={i} className="absolute rounded-full bg-accent" style={{ width: `${(i % 3) + 2}px`, height: `${(i % 3) + 2}px`, left: `${(i * 16.5) % 100}%`, top: `${(i * 18.3) % 100}%`, opacity: 0.06 }} />
             ))}
           </div>
+
+          {/* Pulse ring behind CTA */}
+          <div className="hero-s4-pulse-ring absolute pointer-events-none" style={{ width: "200px", height: "200px", borderRadius: "50%", border: "1px solid var(--color-accent/20)", top: "50%", left: "50%", transform: "translate(-50%, -50%) scale(0.8)", opacity: 0 }} />
 
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
             <div className="hero-s4-line hero-s4-line-m w-20 h-[1px] bg-accent mx-auto" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)", transform: "scaleX(0)" }} />

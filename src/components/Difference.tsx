@@ -23,7 +23,7 @@ export default function Difference() {
     setExpandedCard(expandedCard === index ? null : index);
   };
 
-  useGSAP(() => {
+    useGSAP(() => {
     const mm = gsap.matchMedia();
 
     gsap.utils.toArray(".diff-float").forEach((shape, i) => {
@@ -48,6 +48,9 @@ export default function Difference() {
       headerTl.fromTo(".diff-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
       headerTl.fromTo(".diff-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
       headerTl.fromTo(".diff-intro", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.8);
+
+      // Connecting line between cards
+      gsap.fromTo(".diff-connecting-line", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, ease: "none", scrollTrigger: { trigger: ".diff-cards", start: "top 60%", end: "bottom 40%", scrub: true } });
 
       const cards = gsap.utils.toArray(".diff-card") as HTMLElement[];
       cards.forEach((card, index) => {
@@ -102,6 +105,14 @@ export default function Difference() {
           gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: "power2.out" });
           if (img) gsap.to(img, { scale: 1, duration: 0.7, ease: "power2.out" });
         });
+      });
+
+      // Section exit
+      gsap.to(".diff-cards", {
+        opacity: 0.4,
+        y: -30,
+        ease: "none",
+        scrollTrigger: { trigger: ".diff-cards", start: "bottom 20%", end: "bottom top", scrub: true },
       });
     });
 
@@ -202,7 +213,9 @@ export default function Difference() {
           </div>
         </div>
 
-        <div className="diff-cards space-y-0">
+        <div className="diff-cards space-y-0 relative">
+          {/* Connecting line (desktop) */}
+          <div className="diff-connecting-line absolute left-0 right-0 h-[1px] bg-accent/10 origin-top hidden md:block" style={{ top: "0", transform: "scaleY(0)", opacity: 0 }} />
           {features.map((f, i) => (
             <div key={i} className="diff-card grid grid-cols-1 md:grid-cols-12 cursor-default" style={{ gap: "clamp(3rem, 6vw, 6rem)", transformStyle: "preserve-3d", perspective: "1200px" }}>
               <div className="md:col-span-12"><div className="diff-card-line w-full h-[1px] bg-text-08 origin-left" /></div>

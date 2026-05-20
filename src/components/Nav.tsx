@@ -203,8 +203,8 @@ export default function Nav({ loaded }: { loaded: boolean }) {
         style={{ opacity: 0 }}
         className="fixed top-0 left-0 w-full z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
-        <div className="absolute top-0 left-0 right-0 z-50" style={{ height: "1px" }}>
-          <div ref={progressRef} className="h-full bg-accent origin-left" style={{ transform: "scaleX(0)" }} />
+        <div className="absolute top-0 left-0 right-0 z-50" style={{ height: "2px" }}>
+          <div ref={progressRef} className="h-full origin-left" style={{ transform: "scaleX(0)", background: "linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-bright) 100%)", boxShadow: "0 0 8px var(--color-accent-glow)" }} />
         </div>
 
         <div

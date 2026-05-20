@@ -21,14 +21,34 @@
   --color-accent: #8b6914;
   --color-accent-bright: #a67c1a;
   --color-accent-dim: rgba(139, 105, 20, 0.12);
+  --color-accent-glow: rgba(139, 105, 20, 0.25);
+  --color-accent-subtle: rgba(139, 105, 20, 0.06);
 
   /* Muted */
   --color-muted: #6b6b6b;
+
+  /* Additional tones */
+  --color-text-60: rgba(26, 26, 26, 0.6);
+  --color-text-20: rgba(26, 26, 26, 0.2);
+  --color-border: rgba(26, 26, 26, 0.06);
+  --color-shadow: rgba(0, 0, 0, 0.04);
 
   /* Fonts */
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-playfair), Georgia, serif;
   --font-mono: "SF Mono", "Fira Code", monospace;
+
+  /* Animation timing */
+  --anim-fast: 0.3s;
+  --anim-medium: 0.6s;
+  --anim-slow: 1.2s;
+  --anim-slower: 2s;
+
+  /* Animation easing */
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-hover: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* ─────────────────── RESET ─────────────────── */
@@ -119,10 +139,11 @@ body {
 
 .scroll-progress__bar {
   height: 100%;
-  background: var(--color-accent);
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
   transform-origin: left;
   transform: scaleX(0);
   will-change: transform;
+  box-shadow: 0 0 8px var(--color-accent-glow);
 }
 
 /* ─────────────────── LAYOUT ─────────────────── */
@@ -522,9 +543,15 @@ body {
 }
 
 /* ─────────────────── WILL-CHANGE CLEANUP ─────────────────── */
-.will-change-auto {
-  will-change: auto !important;
-}
+.will-change-auto { will-change: auto !important; }
+.will-change-transform { will-change: transform; }
+.will-change-opacity { will-change: opacity; }
+.will-change-both { will-change: transform, opacity; }
+
+/* ─────────────────── CSS CONTAIN ─────────────────── */
+.contain-anim { contain: layout style paint; }
+.contain-strict { contain: strict; }
+.contain-content { contain: content; }
 
 /* ─────────────────── PREMIUM MOBILE UTILITIES ─────────────────── */
 @media (max-width: 1023px) {
