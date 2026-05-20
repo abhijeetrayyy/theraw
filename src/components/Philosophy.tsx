@@ -14,11 +14,21 @@ const stats = [
   { value: 98, suffix: "%", label: "Retention", desc: "Rate" },
 ];
 
+const bodyLines = [
+  "In an industry overwhelmed by endless choices,",
+  "true quality comes from refined selection \u2014",
+  "not abundance. Every material has been",
+  "evaluated, tested, and approved by people",
+  "who build for a living.",
+];
+
 export default function Philosophy() {
   const section = useRef<HTMLElement>(null);
   const imgRef1 = useRef<HTMLDivElement>(null);
   const imgRef2 = useRef<HTMLDivElement>(null);
   const statsScrollRef = useRef<HTMLDivElement>(null);
+  const pinnedRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [activeStat, setActiveStat] = useState(0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
@@ -93,6 +103,19 @@ export default function Philosophy() {
       }, 0);
     }
 
+    // ── Pinned headline while content scrolls past ──
+    if (pinnedRef.current && scrollAreaRef.current) {
+      ScrollTrigger.create({
+        trigger: pinnedRef.current,
+        start: "top 15%",
+        endTrigger: scrollAreaRef.current,
+        end: "bottom 15%",
+        pin: true,
+        pinSpacing: true,
+      });
+    }
+
+    // ── Entrance animation timeline ──
     const tl = gsap.timeline({ scrollTrigger: { trigger: ".phil-content", start: "top 60%", end: "top 15%", scrub: 2.5 } });
 
     tl.fromTo(".phil-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: "none" }, 0);
@@ -101,19 +124,58 @@ export default function Philosophy() {
 
     tl.fromTo(".phil-heading-word", { y: "140%", opacity: 0, rotateX: -45, skewY: 5 }, { y: "0%", opacity: 1, rotateX: 0, skewY: 0, duration: 1.4, stagger: 0.12, ease: "power4.out" }, 0.2);
 
-    tl.fromTo(".phil-body", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.6);
+    tl.fromTo(".phil-body",
+      { y: 50, opacity: 0, filter: "blur(8px)" },
+      { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" },
+      0.6
+    );
 
     tl.fromTo(".phil-quote", { x: -80, opacity: 0, rotateY: 15, scale: 0.95 }, { x: 0, opacity: 1, rotateY: 0, scale: 1, duration: 1.6, ease: "power3.out" }, 0.7);
 
     tl.fromTo(".phil-quote-mark", { scale: 0, opacity: 0, rotation: -90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.8, ease: "back.out(3)" }, 0.8);
 
-    // Section exit animation
+    // ── Multi-line stagger with scroll scrub ──
+    gsap.fromTo(".phil-line-text",
+      { y: "120%", opacity: 0 },
+      { y: "0%", opacity: 1, stagger: 0.15, duration: 1.2, ease: "power4.out",
+        scrollTrigger: {
+          trigger: ".phil-scroll-area",
+          start: "top 65%",
+          end: "top 20%",
+          scrub: 1.5,
+        },
+      }
+    );
+
+    // ── Left border accent grows as lines reveal ──
+    gsap.fromTo(".phil-border-accent",
+      { scaleY: 0 },
+      { scaleY: 1, ease: "none",
+        scrollTrigger: {
+          trigger: ".phil-scroll-area",
+          start: "top 65%",
+          end: "top 20%",
+          scrub: 1,
+        },
+      }
+    );
+
+    // ── Section exit animations ──
     gsap.to(".phil-content", {
       opacity: 0.3,
       y: -40,
+      scale: 0.95,
       ease: "none",
       scrollTrigger: { trigger: ".phil-content", start: "bottom 30%", end: "bottom top", scrub: true },
     });
+
+    // ── Horizontal exit line ──
+    gsap.fromTo(".phil-exit-line",
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, ease: "none",
+        scrollTrigger: { trigger: ".phil-content", start: "bottom 20%", end: "bottom top", scrub: true },
+      }
+    );
 
     mm.add("(min-width: 1024px)", () => {
       gsap.to(".phil-quote", {
@@ -133,6 +195,19 @@ export default function Philosophy() {
           gsap.to(el, { y: 0, boxShadow: "none", duration: 0.5, ease: "power2.out" });
           gsap.to(el.querySelector(".stat-num"), { color: "var(--color-text)", scale: 1, duration: 0.4 });
           gsap.to(el.querySelector(".stat-glow"), { opacity: 0, scale: 0.8, duration: 0.5 });
+        });
+      });
+
+      // ── Image caption overlays on hover ──
+      gsap.utils.toArray(".phil-img-hover").forEach((wrapper) => {
+        const el = wrapper as HTMLElement;
+        const caption = el.querySelector(".phil-caption") as HTMLElement;
+        if (!caption) return;
+        el.addEventListener("mouseenter", () => {
+          gsap.to(caption, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
+        });
+        el.addEventListener("mouseleave", () => {
+          gsap.to(caption, { opacity: 0, y: 10, duration: 0.5, ease: "power2.out" });
         });
       });
     });
@@ -157,7 +232,7 @@ export default function Philosophy() {
         }, { passive: true });
       });
 
-      // Mobile image parallax enhancement
+      // Mobile image parallax
       gsap.utils.toArray(".phil-img-hover").forEach((imgWrap) => {
         const el = imgWrap as HTMLElement;
         const inner = el.querySelector("div") as HTMLElement;
@@ -169,17 +244,47 @@ export default function Philosophy() {
           });
         }
       });
+
+      // ── Mobile stat card swipe momentum ──
+      let momentumTimeout: ReturnType<typeof setTimeout> | undefined;
+      const statContainer = statsScrollRef.current;
+      if (statContainer) {
+        statContainer.addEventListener("scroll", () => {
+          clearTimeout(momentumTimeout);
+          momentumTimeout = setTimeout(() => {
+            const scrollLeft = statContainer.scrollLeft;
+            const cardWidth = statContainer.querySelector(".stat-card")?.clientWidth || 300;
+            const snapIndex = Math.round(scrollLeft / (cardWidth + 16));
+            const snapPos = snapIndex * (cardWidth + 16);
+            statContainer.scrollTo({ left: snapPos, behavior: "smooth" });
+          }, 150);
+        }, { passive: true });
+      }
     });
 
-    // Enhanced stat count-up with easing
+    // ── Enhanced stat count-up (80% fast, 20% slow) ──
     const statEls = section.current?.querySelectorAll(".stat-num");
     statEls?.forEach((el, i) => {
       const target = stats[i]?.value || 0;
       const suffix = stats[i]?.suffix || "";
-      gsap.to({ v: 0 }, {
-        v: target, duration: 3.5, ease: "power2.out",
-        scrollTrigger: { trigger: ".phil-stats", start: "top 65%", end: "top 35%", scrub: true },
-        onUpdate: function () { (el as HTMLElement).textContent = Math.round(this.targets()[0].v) + suffix; },
+      const proxy = { val: 0 };
+      const eightyPct = Math.round(target * 0.8);
+      const trigger = ScrollTrigger.create({
+        trigger: ".phil-stats",
+        start: "top 65%",
+        end: "top 35%",
+        scrub: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          let display: number;
+          if (progress < 0.5) {
+            display = Math.round((progress / 0.5) * eightyPct);
+          } else {
+            const remaining = (progress - 0.5) / 0.5;
+            display = Math.round(eightyPct + remaining * (target - eightyPct));
+          }
+          (el as HTMLElement).textContent = display + suffix;
+        },
       });
     });
 
@@ -229,46 +334,68 @@ export default function Philosophy() {
       <div className="phil-float absolute bottom-[25%] left-[5%] w-24 h-24 md:w-36 md:h-36 rounded-full bg-accent-dim pointer-events-none" />
       <div className="phil-float absolute top-[40%] right-[20%] w-16 h-16 md:w-24 md:h-24 rounded-full border border-text/10 pointer-events-none" />
 
-      <div style={{ paddingTop: "clamp(10rem, 18vw, 20rem)", paddingBottom: "clamp(10rem, 18vw, 20rem)" }}>
+      {/* ── Pinned headline + multi-line body ── */}
+      <div className="phil-content" style={{ paddingTop: "clamp(10rem, 18vw, 20rem)" }}>
         <div className="wrap">
-          <div className="phil-content grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(4rem, 8vw, 8rem)" }}>
-            <div className="lg:col-span-3">
-              <div className="phil-line w-14 h-[1px] bg-accent origin-left" style={{ marginBottom: "clamp(2.5rem, 5vw, 4rem)" }} />
-              <span className="t-label text-accent tracking-[0.35em]">
-                {"Our Philosophy".split(" ").map((w, i) => (<span key={i} className="phil-label-word inline-block mr-[0.3em]">{w}</span>))}
-              </span>
+          {/* Pinned area: label + headline */}
+          <div ref={pinnedRef}>
+            <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(4rem, 8vw, 8rem)" }}>
+              <div className="lg:col-span-3">
+                <div className="phil-line w-14 h-[1px] bg-accent origin-left" style={{ marginBottom: "clamp(2.5rem, 5vw, 4rem)" }} />
+                <span className="t-label text-accent tracking-[0.35em]">
+                  {"Our Philosophy".split(" ").map((w, i) => (<span key={i} className="phil-label-word inline-block mr-[0.3em]">{w}</span>))}
+                </span>
+              </div>
+              <div className="lg:col-span-8 lg:col-start-5">
+                <div className="overflow-hidden" style={{ marginBottom: "0.25rem" }}>
+                  <h2 className="phil-heading-word t-h1 text-text">Not more.</h2>
+                </div>
+                <div className="overflow-hidden" style={{ marginBottom: "clamp(2rem, 4vw, 4rem)" }}>
+                  <h2 className="phil-heading-word t-h1 text-accent italic">Better.</h2>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="lg:col-span-8 lg:col-start-5">
-              <div className="overflow-hidden" style={{ marginBottom: "0.25rem" }}>
-                <h2 className="phil-heading-word t-h1 text-text">Not more.</h2>
+          {/* Scroll area: multi-line body + quote */}
+          <div ref={scrollAreaRef} className="phil-scroll-area">
+            <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(4rem, 8vw, 8rem)" }}>
+              <div className="lg:col-span-3">
+                <div className="phil-border-accent w-[2px] bg-gradient-to-b from-accent via-accent/40 to-transparent origin-top" style={{ height: "clamp(10rem, 20vw, 18rem)", transform: "scaleY(0)" }} />
               </div>
-              <div className="overflow-hidden" style={{ marginBottom: "clamp(4rem, 8vw, 8rem)" }}>
-                <h2 className="phil-heading-word t-h1 text-accent italic">Better.</h2>
-              </div>
+              <div className="lg:col-span-8 lg:col-start-5">
+                <div className="phil-body" style={{ marginBottom: "clamp(4rem, 8vw, 8rem)" }}>
+                  {bodyLines.map((line, i) => (
+                    <div key={i} className="overflow-hidden" style={{ marginBottom: "0.35rem" }}>
+                      <p className="phil-line-text t-body-lg">{line}</p>
+                    </div>
+                  ))}
+                </div>
 
-              <p className="phil-body t-body-lg max-w-lg" style={{ marginBottom: "clamp(4rem, 8vw, 8rem)" }}>
-                In an industry overwhelmed by endless choices, true quality comes from refined selection — not abundance. Every material has been evaluated, tested, and approved by people who build for a living.
-              </p>
-
-              <div className="phil-quote relative" style={{ paddingLeft: "clamp(3rem, 6vw, 6rem)" }}>
-                <div className="phil-quote-mark absolute left-0 top-0 text-6xl font-serif text-accent/20 leading-none select-none">&ldquo;</div>
-                <div className="absolute left-0 top-8 bottom-8 w-[2px] bg-gradient-to-b from-accent via-accent/40 to-transparent" />
-                <p className="t-h2 text-text-50 italic leading-snug">&ldquo;Every selection is deliberate.<br />Every outcome is elevated.&rdquo;</p>
-                <span className="t-label text-muted block" style={{ marginTop: "clamp(2rem, 4vw, 3.5rem)" }}>— Raw Select</span>
+                <div className="phil-quote relative" style={{ paddingLeft: "clamp(3rem, 6vw, 6rem)" }}>
+                  <div className="phil-quote-mark absolute left-0 top-0 text-6xl font-serif text-accent/20 leading-none select-none">&ldquo;</div>
+                  <div className="absolute left-0 top-8 bottom-8 w-[2px] bg-gradient-to-b from-accent via-accent/40 to-transparent" />
+                  <p className="t-h2 text-text-50 italic leading-snug">&ldquo;Every selection is deliberate.<br />Every outcome is elevated.&rdquo;</p>
+                  <span className="t-label text-muted block" style={{ marginTop: "clamp(2rem, 4vw, 3.5rem)" }}>&mdash; Raw Select</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="wrap" style={{ marginBottom: "clamp(6rem, 12vw, 12rem)" }}>
+      {/* ── Image 1 with caption overlay ── */}
+      <div className="wrap" style={{ marginTop: "clamp(6rem, 12vw, 12rem)" }}>
         <div ref={imgRef1} className="phil-img-hover relative w-full overflow-hidden cursor-pointer tap-active" style={{ height: "clamp(350px, 55vh, 700px)" }}
           onClick={() => openZoom("/photo-1616046229478-9901c5536a45.avif")}
         >
           <div className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ backgroundImage: 'url("/photo-1616046229478-9901c5536a45.avif")', height: "120%", top: "-10%" }} />
           <div className="phil-img1-overlay absolute inset-0 bg-gradient-to-t from-bg-2/50 to-transparent" style={{ opacity: 0 }} />
           <div className="phil-img1-border absolute inset-0 border border-text/10 pointer-events-none" style={{ margin: "clamp(1rem, 2vw, 1.5rem)", transform: "scaleX(0) scaleY(0)", opacity: 0 }} />
+          <div className="phil-caption absolute bottom-6 left-6 z-10" style={{ opacity: 0, transform: "translateY(10px)" }}>
+            <p className="t-label text-white/90">Hand-selected materials</p>
+            <p className="text-xs text-white/50 mt-1">Curated from global suppliers</p>
+          </div>
           <div className="absolute bottom-4 right-4 md:hidden flex items-center gap-2 text-white/60 text-xs pointer-events-none">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
             <span>Tap to zoom</span>
@@ -276,6 +403,7 @@ export default function Philosophy() {
         </div>
       </div>
 
+      {/* ── Stats section ── */}
       <div className="divider" />
       <div className="phil-stats" style={{ paddingTop: "clamp(6rem, 12vw, 12rem)", paddingBottom: "clamp(6rem, 12vw, 12rem)" }}>
         <div className="wrap">
@@ -291,7 +419,7 @@ export default function Philosophy() {
               </div>
             ))}
           </div>
-          <div className="md:hidden flex overflow-x-auto scroll-snap-x gap-4 -mx-6 px-6" ref={statsScrollRef} style={{ paddingBottom: "1rem" }}>
+          <div className="md:hidden flex overflow-x-auto scroll-snap-x gap-4 -mx-6 px-6" ref={statsScrollRef} style={{ paddingBottom: "1rem", scrollBehavior: "smooth" }}>
             {stats.map((s, i) => (
               <div key={i} className="stat-card relative cursor-default flex-shrink-0 scroll-snap-center tap-ripple" style={{ minWidth: "80vw", padding: "clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3rem)", borderRadius: "16px", background: "var(--color-surface)", borderTop: activeStat === i ? "3px solid var(--color-accent)" : "2px solid var(--color-accent/15)", boxShadow: activeStat === i ? "0 8px 32px var(--color-accent/12)" : "0 2px 8px rgba(0,0,0,0.04)", transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }}>
                 <div className="stat-glow absolute inset-0 rounded-2xl bg-accent-dim opacity-0 scale-80 pointer-events-none transition-none" />
@@ -314,19 +442,27 @@ export default function Philosophy() {
         </div>
       </div>
 
-      <div className="wrap" style={{ marginTop: "clamp(6rem, 12vw, 12rem)", marginBottom: "clamp(6rem, 12vw, 12rem)" }}>
-        <div ref={imgRef2} className="phil-img-hover relative w-full overflow-hidden cursor-pointer tap-active" style={{ height: "clamp(300px, 45vh, 550px)" }}
+      {/* ── Full-bleed image moment ── */}
+      <div className="w-screen relative left-1/2 -translate-x-1/2" style={{ marginTop: "clamp(6rem, 12vw, 12rem)", marginBottom: "clamp(6rem, 12vw, 12rem)" }}>
+        <div ref={imgRef2} className="phil-img-hover relative w-full overflow-hidden cursor-pointer tap-active" style={{ height: "clamp(400px, 55vh, 650px)" }}
           onClick={() => openZoom("/photo-1618221195710-dd6b41faaea6.avif")}
         >
           <div className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ backgroundImage: 'url("/photo-1618221195710-dd6b41faaea6.avif")', height: "120%", top: "-10%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-bg-2/50 to-transparent" />
           <div className="phil-img2-border absolute inset-0 border border-text/10 pointer-events-none" style={{ margin: "clamp(1rem, 2vw, 1.5rem)", transform: "scaleX(0)", opacity: 0 }} />
+          <div className="phil-caption absolute bottom-6 left-6 z-10" style={{ opacity: 0, transform: "translateY(10px)" }}>
+            <p className="t-label text-white/90">Precision-crafted finishes</p>
+            <p className="text-xs text-white/50 mt-1">Every surface tells a story</p>
+          </div>
           <div className="absolute bottom-4 right-4 md:hidden flex items-center gap-2 text-white/60 text-xs pointer-events-none">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
             <span>Tap to zoom</span>
           </div>
         </div>
       </div>
+
+      {/* ── Exit horizontal line ── */}
+      <div className="phil-exit-line w-full h-[1px] bg-accent/20 origin-left" style={{ transform: "scaleX(0)", opacity: 0 }} />
 
       <div className="divider" />
 

@@ -5,8 +5,8 @@
 ## Phase Status
 - [x] Phase 1: Foundation — VERIFY completeness then mark done
 - [x] **Phase 2: Hero Overhaul — COMPLETE**
-- [ ] **Phase 3: Philosophy + Marquee — CURRENT**
-- [ ] Phase 4: Difference + Collection
+- [x] **Phase 3: Philosophy + Marquee — COMPLETE**
+- [ ] **Phase 4: Difference + Collection — CURRENT**
 - [ ] Phase 5: Process + Testimonials
 - [ ] Phase 6: Projects + CTA + Footer
 - [ ] Phase 7: Polish + Testing
@@ -61,18 +61,46 @@ After editing Hero.tsx:
 ## Phase 3: Philosophy + Marquee (CURRENT)
 
 ### File: `src/components/Philosophy.tsx`
-- Pin headline while content scrolls past
-- Multi-line philosophy statement reveals line by line
-- Stats count-up with easing and suffix animation
-- Full-bleed image moment
-- Section exit animation
+
+Reference: MASTER_ACTION_PLAN.md §2.2
+
+**Pin + Line Reveal**
+- [x] 1. Pin headline ("Not more. Better.") while body content scrolls past (ScrollTrigger pin, start: "top 15%", end: scroll area bottom + 15%)
+- [x] 2. Split body into multi-line philosophy statement, each line in overflow container, stagger 0.15s on scroll
+- [x] 3. Left border accent that grows as lines are revealed (scaleY 0 → 1, linked to scroll progress)
+
+**Stats**
+- [x] 4. Enhanced stat count-up with two-phase easing (0→80% fast, 80%→100% slow)
+- [x] 5. Stat card hover — scale 1→1.05, color text→accent (EXISTING — verified)
+
+**Images**
+- [x] 6. Caption overlays on images that fade in on hover (opacity 0→1, y 10→0, ease power2.out)
+- [x] 7. Full-bleed image moment — one image extends edge-to-edge (width 100vw, out of wrap)
+
+**Exit**
+- [x] 8. Section exit — scale down added (opacity 1→0.3, scale 1→0.95, y 0→-40)
+- [x] 9. Horizontal line draws across section during exit (scaleX 0→1 at section bottom)
+
+**Mobile**
+- [x] 10. Stat card swipe with scroll snap momentum (debounced snap-to-card on scroll end)
 
 ### File: `src/components/Marquee.tsx`
-- Scroll velocity reactivity (speed + opacity + color shift)
-- Word highlight on hover (accent color)
-- Third row on desktop with different speed
-- Gradient mask on edges
-- Slingshot acceleration during exit
+
+Reference: MASTER_ACTION_PLAN.md §2.3
+
+**Already implemented (verify):**
+- [x] 1. Scroll velocity reactivity on desktop (self.getVelocity() affects speed)
+- [x] 2. Opacity shift based on scroll velocity (text-20 → text-70)
+- [x] 3. Color shift based on scroll velocity (text-30 → accent)
+- [x] 4. Word highlight on hover (accent color, scale 1.05)
+- [x] 5. Gradient mask on left/right edges (mask-image: linear-gradient)
+- [x] 6. Third row on desktop with slower speed
+
+**New additions:**
+- [x] 7. Marquee pause on hover (desktop) — tween.pause()/resume()
+- [x] 8. Separator dots continuous rotate and scale (rotation 360°, scale pulse)
+- [x] 9. Glow behind marquee that pulses (radial gradient, opacity 0.3→0.6, scale pulse)
+- [x] 10. Slingshot acceleration during section exit (timeScale 1x→3x, "bottom 30%"→"bottom top")
 
 ---
 

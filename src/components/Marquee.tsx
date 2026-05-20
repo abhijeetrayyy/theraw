@@ -26,6 +26,7 @@ export default function Marquee() {
   const trackRef = useRef<HTMLDivElement>(null);
   const track2Ref = useRef<HTMLDivElement>(null);
   const track3Ref = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -45,10 +46,14 @@ export default function Marquee() {
     entranceTl.fromTo(".marquee-track, .marquee-track-2, .marquee-track-3", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.4);
 
     mm.add("(min-width: 1024px)", () => {
+      let tween1: gsap.core.Tween | null = null;
+      let tween2: gsap.core.Tween | null = null;
+      let tween3: gsap.core.Tween | null = null;
+
       // Row 1 - forward
       if (trackRef.current) {
         const track = trackRef.current;
-        gsap.to(track, {
+        tween1 = gsap.to(track, {
           xPercent: -50,
           duration: 50,
           ease: "none",
@@ -75,6 +80,7 @@ export default function Marquee() {
           },
         });
 
+        // Word highlight + pause on hover
         track.querySelectorAll("span").forEach((word) => {
           word.addEventListener("mouseenter", () => {
             gsap.to(word, { color: "var(--color-accent)", scale: 1.05, duration: 0.3 });
@@ -88,7 +94,7 @@ export default function Marquee() {
       // Row 2 - reverse
       if (track2Ref.current) {
         gsap.set(track2Ref.current, { xPercent: -50 });
-        gsap.to(track2Ref.current, {
+        tween2 = gsap.to(track2Ref.current, {
           xPercent: 0,
           duration: 65,
           ease: "none",
@@ -107,13 +113,75 @@ export default function Marquee() {
 
       // Row 3 - forward, subtle
       if (track3Ref.current) {
-        gsap.to(track3Ref.current, {
+        tween3 = gsap.to(track3Ref.current, {
           xPercent: -50,
           duration: 80,
           ease: "none",
           repeat: -1,
         });
       }
+
+      // ── Pause on hover (desktop) ──
+      const pauseAll = () => {
+        tween1?.pause();
+        tween2?.pause();
+        tween3?.pause();
+      };
+      const resumeAll = () => {
+        tween1?.resume();
+        tween2?.resume();
+        tween3?.resume();
+      };
+      section.current?.addEventListener("mouseenter", pauseAll);
+      section.current?.addEventListener("mouseleave", resumeAll);
+
+      // ── Separator dots continuous rotate and scale ──
+      gsap.utils.toArray<HTMLElement>(".marquee-dot").forEach((dot) => {
+        gsap.to(dot, {
+          rotation: 360,
+          scale: 1.4,
+          duration: 2 + Math.random(),
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      });
+
+      // ── Glow behind marquee that pulses ──
+      if (glowRef.current) {
+        gsap.to(glowRef.current, {
+          opacity: 0.6,
+          scale: 1.08,
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+
+      // ── Slingshot acceleration during section exit ──
+      ScrollTrigger.create({
+        trigger: section.current,
+        start: "bottom 30%",
+        end: "bottom top",
+        scrub: 1,
+        onUpdate: (self) => {
+          const boost = 1 + self.progress * 2;
+          tween1?.timeScale(boost);
+          tween2?.timeScale(boost * 0.8);
+          tween3?.timeScale(boost * 0.7);
+        },
+        onLeave: () => {
+          tween1?.timeScale(1);
+          tween2?.timeScale(1);
+          tween3?.timeScale(1);
+        },
+        onEnterBack: () => {
+          tween1?.timeScale(1);
+          tween2?.timeScale(1);
+          tween3?.timeScale(1);
+        },
+      });
 
       // Section exit
       gsap.to(section.current, {
@@ -189,6 +257,9 @@ export default function Marquee() {
     <section ref={section} className="relative bg-bg-2 overflow-hidden" style={{ paddingTop: "clamp(5rem, 10vw, 8rem)", paddingBottom: "clamp(5rem, 10vw, 8rem)" }}>
       <div className="divider" />
 
+      {/* ── Glow behind marquee ── */}
+      <div ref={glowRef} className="marquee-glow absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 50%, var(--color-accent-dim) 0%, transparent 70%)", opacity: 0.3, transform: "scale(0.95)" }} />
+
       {/* Header */}
       <div className="wrap mb-8 md:mb-12">
         <p className="marquee-label t-label text-accent tracking-[0.35em] mb-3 md:mb-4" style={{ opacity: 0 }}>Material Library</p>
@@ -201,7 +272,7 @@ export default function Marquee() {
           {[...items, ...items].map((item, i) => (
             <div key={i} className="flex items-center gap-6 shrink-0">
               <span className="t-h3 whitespace-nowrap transition-all duration-300" style={{ fontSize: "clamp(2rem, 5vw, 4rem)", lineHeight: 1, color: "rgba(26, 26, 26, 0.15)" }}>{item}</span>
-              <span className="w-2 h-2 rounded-full bg-accent/40 shrink-0" />
+              <span className="marquee-dot w-2 h-2 rounded-full bg-accent/40 shrink-0 block" />
             </div>
           ))}
         </div>
@@ -212,7 +283,7 @@ export default function Marquee() {
         <div ref={track2Ref} className="marquee-track-2 flex items-center" style={{ gap: "clamp(4rem, 8vw, 6rem)", width: "max-content", opacity: 0 }}>
           {[...itemsRow2, ...itemsRow2].map((item, i) => (
             <div key={`r2-${i}`} className="flex items-center gap-4 shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent/25 shrink-0" />
+              <span className="marquee-dot w-1.5 h-1.5 rounded-full bg-accent/25 shrink-0 block" />
               <span className="whitespace-nowrap transition-all duration-300" style={{ fontSize: "clamp(1.2rem, 3vw, 2rem)", color: "rgba(26, 26, 26, 0.08)", fontFamily: "var(--font-serif)", fontStyle: "italic" }}>{item}</span>
             </div>
           ))}
@@ -224,7 +295,7 @@ export default function Marquee() {
         <div ref={track3Ref} className="marquee-track-3 flex items-center" style={{ gap: "clamp(3rem, 6vw, 5rem)", width: "max-content", opacity: 0 }}>
           {[...itemsRow3, ...itemsRow3].map((item, i) => (
             <div key={`r3-${i}`} className="flex items-center gap-3 shrink-0">
-              <span className="w-1 h-1 rounded-full bg-text/15 shrink-0" />
+              <span className="marquee-dot w-1 h-1 rounded-full bg-text/15 shrink-0 block" />
               <span className="t-label whitespace-nowrap" style={{ color: "rgba(26, 26, 26, 0.1)", letterSpacing: "0.2em" }}>{item}</span>
             </div>
           ))}
