@@ -47,7 +47,7 @@ export default function Philosophy() {
     return () => observer.disconnect();
   }, []);
 
-    useGSAP(() => {
+  useGSAP(() => {
     const mm = gsap.matchMedia();
 
     gsap.utils.toArray(".phil-float").forEach((shape, i) => {
