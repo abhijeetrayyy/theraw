@@ -9,12 +9,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
+    const isMobile = window.innerWidth < 1024;
+
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: isMobile ? 1 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.5,
+      wheelMultiplier: isMobile ? 1 : 0.9,
+      touchMultiplier: isMobile ? 2 : 1.5,
     });
 
     lenis.on("scroll", ScrollTrigger.update);

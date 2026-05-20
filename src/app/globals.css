@@ -344,3 +344,184 @@ body {
   }
   .marquee-track { animation: none; }
 }
+
+/* ─────────────────── MOBILE UTILITIES ─────────────────── */
+@media (max-width: 1023px) {
+  .mobile-only { display: block !important; }
+  .desktop-only { display: none !important; }
+  .mobile-full-bleed { width: 100vw; margin-left: calc(-50vw + 50%); }
+}
+@media (min-width: 1024px) {
+  .mobile-only { display: none !important; }
+  .desktop-only { display: block !important; }
+}
+
+/* ─────────────────── MOBILE SECTION SPACING ─────────────────── */
+@media (max-width: 1023px) {
+  .section-pad {
+    padding-top: clamp(4rem, 10vw, 12rem);
+    padding-bottom: clamp(4rem, 10vw, 12rem);
+  }
+  .section-pad-lg {
+    padding-top: clamp(5rem, 12vw, 16rem);
+    padding-bottom: clamp(5rem, 12vw, 16rem);
+  }
+  .section-gap {
+    height: clamp(3rem, 6vw, 8rem);
+  }
+}
+
+/* ─────────────────── MOBILE TYPOGRAPHY ─────────────────── */
+@media (max-width: 1023px) {
+  .t-giant {
+    font-size: clamp(3rem, 12vw, 15rem);
+    line-height: 0.9;
+  }
+  .t-display {
+    font-size: clamp(2.5rem, 10vw, 9rem);
+  }
+  .t-h1 {
+    font-size: clamp(2rem, 7vw, 6rem);
+    line-height: 1;
+  }
+  .t-h2 {
+    font-size: clamp(1.5rem, 5vw, 3.5rem);
+    line-height: 1.1;
+  }
+  .t-h3 {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+  }
+  .t-stat {
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+  }
+  .t-body-lg, .t-body {
+    line-height: 1.7;
+  }
+}
+
+/* ─────────────────── MOBILE MARQUEE ─────────────────── */
+@media (max-width: 767px) {
+  .marquee-track {
+    animation: marquee-slide 60s linear infinite;
+  }
+  .marquee-track-reverse {
+    animation: marquee-slide-reverse 70s linear infinite;
+  }
+}
+@keyframes marquee-slide-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* ─────────────────── MOBILE SCROLL SNAP ─────────────────── */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-snap-y {
+  scroll-snap-type: y proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-snap-center {
+  scroll-snap-align: center;
+}
+.scroll-snap-start {
+  scroll-snap-align: start;
+}
+
+/* ─────────────────── MOBILE SCROLL INDICATOR BOUNCE ─────────────────── */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+.scroll-bounce {
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* ─────────────────── MOBILE TAP RIPPLE ─────────────────── */
+@keyframes tapRipple {
+  0% { transform: scale(0); opacity: 0.3; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* ─────────────────── MOBILE TOUCH FEEDBACK ─────────────────── */
+@media (max-width: 1023px) {
+  .tap-active:active {
+    transform: scale(0.95);
+    transition: transform 0.15s ease;
+  }
+  .no-context-menu {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* ─────────────────── MOBILE ACCORDION ─────────────────── */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.accordion-content.open {
+  max-height: 500px;
+}
+
+/* ─────────────────── MOBILE BOTTOM NAV ─────────────────── */
+@media (max-width: 1023px) {
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* ─────────────────── MOBILE iOS FIXES ─────────────────── */
+@supports (-webkit-touch-callout: none) {
+  .mobile-dvh {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
+/* ─────────────────── MOBILE OVERSCROLL ─────────────────── */
+@media (max-width: 1023px) {
+  html {
+    overscroll-behavior: none;
+  }
+}
+
+/* ─────────────────── MOBILE IMAGE PROTECTION ─────────────────── */
+@media (max-width: 1023px) {
+  img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+  }
+  img[draggable] {
+    pointer-events: auto;
+  }
+}
+
+/* ─────────────────── MOBILE REDUCED MOTION ─────────────────── */
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .hero-particle, .hero-mobile-particle, .phil-float, .diff-float,
+  .proc-float, .test-quote-float, .proj-float, .foot-float,
+  .coll-particle, .coll-mobile-particle, .cta-particle, .cta-mobile-particle {
+    animation: none !important;
+  }
+  .scroll-bounce {
+    animation: none !important;
+  }
+}
+
+/* ─────────────────── MOBILE SECTION TRANSITIONS ─────────────────── */
+@media (max-width: 1023px) {
+  section {
+    transition: opacity 0.3s ease;
+  }
+}
+
+/* ─────────────────── WILL-CHANGE CLEANUP ─────────────────── */
+.will-change-auto {
+  will-change: auto !important;
+}

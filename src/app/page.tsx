@@ -29,13 +29,23 @@ export default function Home() {
     let frame: number;
     let start: number | null = null;
     const duration = 3000;
+    const milestones = [25, 50, 75, 100];
+    let lastMilestone = 0;
 
     const animate = (ts: number) => {
       if (!start) start = ts;
       const elapsed = ts - start;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.round(eased * 100));
+      const currentCount = Math.round(eased * 100);
+      setCount(currentCount);
+
+      for (const m of milestones) {
+        if (currentCount >= m && lastMilestone < m) {
+          if (navigator.vibrate) navigator.vibrate(8);
+          lastMilestone = m;
+        }
+      }
 
       if (lineRef.current) {
         lineRef.current.style.transform = `scaleX(${eased})`;
@@ -62,7 +72,6 @@ export default function Home() {
       },
     });
 
-    // Counter fades out
     tl.to(counterRef.current, {
       opacity: 0,
       y: -30,
@@ -70,7 +79,6 @@ export default function Home() {
       ease: "power2.in",
     }, 0);
 
-    // Line expands
     tl.to(lineRef.current, {
       scaleX: 1.5,
       opacity: 0,
@@ -78,14 +86,12 @@ export default function Home() {
       ease: "power2.inOut",
     }, 0.2);
 
-    // Preloader splits and exits
     tl.to(preloaderRef.current, {
       yPercent: -100,
       duration: 1.4,
       ease: "power4.inOut",
     }, 0.5);
 
-    // Overlay flash
     tl.fromTo(overlayRef.current,
       { opacity: 0 },
       { opacity: 1, duration: 0.3, ease: "power2.in" }, 0.4
@@ -100,10 +106,10 @@ export default function Home() {
   useEffect(() => {
     if (!loaded) return;
 
-    // Global grain overlay
+    const isMobile = window.innerWidth < 1024;
     const grain = document.createElement("div");
     grain.style.cssText = `
-      position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04;
+      position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: ${isMobile ? 0.025 : 0.04};
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       mix-blend-mode: multiply;
     `;
@@ -114,7 +120,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Preloader */}
       {!loaded && (
         <div ref={preloaderRef} style={{ position: "fixed", inset: 0, zIndex: 10000, background: "#faf8f5", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "2rem" }}>
           <div ref={counterRef} className="font-serif" style={{ fontSize: "clamp(5rem, 14vw, 12rem)", letterSpacing: "-0.04em", color: "var(--color-text)", lineHeight: 1, fontWeight: 400 }}>{count}</div>
@@ -125,7 +130,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* Flash overlay */}
       <div ref={overlayRef} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "var(--color-bg)", opacity: 0, pointerEvents: "none" }} />
 
       <DesktopOnly>

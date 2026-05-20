@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ImageModal from "@/components/ImageModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,11 +18,38 @@ export default function Philosophy() {
   const section = useRef<HTMLElement>(null);
   const imgRef1 = useRef<HTMLDivElement>(null);
   const imgRef2 = useRef<HTMLDivElement>(null);
+  const statsScrollRef = useRef<HTMLDivElement>(null);
+  const [activeStat, setActiveStat] = useState(0);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+
+  const openZoom = (src: string) => {
+    if (navigator.vibrate) navigator.vibrate(8);
+    setZoomedImage(src);
+  };
+  const closeZoom = () => setZoomedImage(null);
+
+  useEffect(() => {
+    if (!statsScrollRef.current) return;
+    const container = statsScrollRef.current;
+    const cards = container.querySelectorAll(".stat-card");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Array.from(cards).indexOf(entry.target as Element);
+            if (index !== -1) setActiveStat(index);
+          }
+        });
+      },
+      { root: container, threshold: 0.6 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
-    // LAYER 1: Floating shapes with organic motion
     gsap.utils.toArray(".phil-float").forEach((shape, i) => {
       gsap.to(shape as Element, {
         y: `random(-60, 60)`,
@@ -36,7 +64,6 @@ export default function Philosophy() {
       });
     });
 
-    // LAYER 2: Subtle background gradient shift
     gsap.to(".phil-bg-shift", {
       backgroundPosition: "100% 50%",
       duration: 20,
@@ -45,62 +72,55 @@ export default function Philosophy() {
       ease: "sine.inOut",
     });
 
-    // LAYER 3: Image 1 multi-layer reveal
     if (imgRef1.current) {
       const tl = gsap.timeline({ scrollTrigger: { trigger: imgRef1.current, start: "top 60%" } });
 
-      // Base image emerges
       tl.fromTo(imgRef1.current,
         { clipPath: "circle(0% at 50% 50%)", scale: 1.4, filter: "blur(20px)" },
         { clipPath: "circle(75% at 50% 50%)", scale: 1, filter: "blur(0px)", duration: 2.8, ease: "power4.inOut" }, 0
       );
 
-      // Border draws around
       tl.fromTo(".phil-img1-border",
         { scaleX: 0, scaleY: 0, opacity: 0 },
         { scaleX: 1, scaleY: 1, opacity: 1, duration: 1.5, ease: "power2.inOut" }, 0.5
       );
 
-      // Overlay gradient fades
       tl.fromTo(".phil-img1-overlay", { opacity: 0 }, { opacity: 1, duration: 1.5 }, 0.8);
 
-      // Parallax on inner image
       tl.to(imgRef1.current.querySelector("div"), {
         scale: 1.15, yPercent: -10, ease: "none",
         scrollTrigger: { trigger: imgRef1.current, start: "top bottom", end: "bottom top", scrub: true },
       }, 0);
     }
 
-    // LAYER 4: Content reveal with sequential build
     const tl = gsap.timeline({ scrollTrigger: { trigger: ".phil-content", start: "top 60%", end: "top 15%", scrub: 2.5 } });
 
-    // Line draws
     tl.fromTo(".phil-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: "none" }, 0);
 
-    // Label words rise with rotation
     tl.fromTo(".phil-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, duration: 1.2, stagger: 0.1, ease: "power3.out" }, 0.1);
 
-    // Heading words with dramatic entrance
     tl.fromTo(".phil-heading-word", { y: "140%", opacity: 0, rotateX: -45, skewY: 5 }, { y: "0%", opacity: 1, rotateX: 0, skewY: 0, duration: 1.4, stagger: 0.12, ease: "power4.out" }, 0.2);
 
-    // Body text with blur resolve
     tl.fromTo(".phil-body", { y: 50, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, 0.6);
 
-    // Quote block slides in from side with depth
     tl.fromTo(".phil-quote", { x: -80, opacity: 0, rotateY: 15, scale: 0.95 }, { x: 0, opacity: 1, rotateY: 0, scale: 1, duration: 1.6, ease: "power3.out" }, 0.7);
 
-    // Quote mark animates
     tl.fromTo(".phil-quote-mark", { scale: 0, opacity: 0, rotation: -90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.8, ease: "back.out(3)" }, 0.8);
 
-    // Quote parallax on scroll
-    mm.add("(min-width: 768px)", () => {
+    mm.add("(min-width: 1024px)", () => {
       gsap.to(".phil-quote", {
         y: -60, ease: "none",
         scrollTrigger: { trigger: ".phil-quote", start: "top bottom", end: "bottom top", scrub: true },
       });
     });
 
-    // LAYER 5: Stats counter with 3D entrance
+    mm.add("(max-width: 1023px)", () => {
+      gsap.to(".phil-quote", {
+        y: -30, ease: "none",
+        scrollTrigger: { trigger: ".phil-quote", start: "top bottom", end: "bottom top", scrub: true },
+      });
+    });
+
     const statEls = section.current?.querySelectorAll(".stat-num");
     statEls?.forEach((el, i) => {
       const target = stats[i]?.value || 0;
@@ -112,28 +132,27 @@ export default function Philosophy() {
       });
     });
 
-    // Stat cards with staggered 3D entrance
     gsap.fromTo(".stat-card",
       { y: 120, opacity: 0, rotateX: 20, scale: 0.85 },
       { y: 0, opacity: 1, rotateX: 0, scale: 1, stagger: 0.25, duration: 1.6, ease: "power3.out", scrollTrigger: { trigger: ".phil-stats", start: "top 65%" } }
     );
 
-    // Stat card hover glow effect
-    gsap.utils.toArray(".stat-card").forEach((card) => {
-      const el = card as HTMLElement;
-      el.addEventListener("mouseenter", () => {
-        gsap.to(el, { y: -10, boxShadow: "0 25px 50px rgba(0,0,0,0.06)", duration: 0.5, ease: "power2.out" });
-        gsap.to(el.querySelector(".stat-num"), { color: "var(--color-accent)", duration: 0.4 });
-        gsap.to(el.querySelector(".stat-glow"), { opacity: 1, scale: 1, duration: 0.5 });
-      });
-      el.addEventListener("mouseleave", () => {
-        gsap.to(el, { y: 0, boxShadow: "none", duration: 0.5, ease: "power2.out" });
-        gsap.to(el.querySelector(".stat-num"), { color: "var(--color-text)", duration: 0.4 });
-        gsap.to(el.querySelector(".stat-glow"), { opacity: 0, scale: 0.8, duration: 0.5 });
+    mm.add("(min-width: 1024px)", () => {
+      gsap.utils.toArray(".stat-card").forEach((card) => {
+        const el = card as HTMLElement;
+        el.addEventListener("mouseenter", () => {
+          gsap.to(el, { y: -10, boxShadow: "0 25px 50px rgba(0,0,0,0.06)", duration: 0.5, ease: "power2.out" });
+          gsap.to(el.querySelector(".stat-num"), { color: "var(--color-accent)", duration: 0.4 });
+          gsap.to(el.querySelector(".stat-glow"), { opacity: 1, scale: 1, duration: 0.5 });
+        });
+        el.addEventListener("mouseleave", () => {
+          gsap.to(el, { y: 0, boxShadow: "none", duration: 0.5, ease: "power2.out" });
+          gsap.to(el.querySelector(".stat-num"), { color: "var(--color-text)", duration: 0.4 });
+          gsap.to(el.querySelector(".stat-glow"), { opacity: 0, scale: 0.8, duration: 0.5 });
+        });
       });
     });
 
-    // LAYER 6: Image 2 reveal with wipe effect
     if (imgRef2.current) {
       const tl2 = gsap.timeline({ scrollTrigger: { trigger: imgRef2.current, start: "top 65%" } });
 
@@ -153,7 +172,6 @@ export default function Philosophy() {
       }, 0);
     }
 
-    // Image hover effects
     gsap.utils.toArray(".phil-img-hover").forEach((imgWrap) => {
       const el = imgWrap as HTMLElement;
       const inner = el.querySelector("div") as HTMLElement;
@@ -170,10 +188,8 @@ export default function Philosophy() {
     <section ref={section} className="relative bg-bg-2 overflow-hidden">
       <div className="divider" />
 
-      {/* LAYER 0: Background gradient shift */}
       <div className="phil-bg-shift absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 50%, var(--color-accent-dim) 0%, transparent 70%)", backgroundSize: "200% 200%" }} />
 
-      {/* LAYER 1: Floating shapes */}
       <div className="phil-float absolute right-[8%] top-[15%] w-40 h-40 md:w-64 md:h-64 rounded-full border border-accent/10 pointer-events-none" />
       <div className="phil-float absolute bottom-[25%] left-[5%] w-24 h-24 md:w-36 md:h-36 rounded-full bg-accent-dim pointer-events-none" />
       <div className="phil-float absolute top-[40%] right-[20%] w-16 h-16 md:w-24 md:h-24 rounded-full border border-text/10 pointer-events-none" />
@@ -211,20 +227,24 @@ export default function Philosophy() {
         </div>
       </div>
 
-      {/* LAYER 3: Image 1 */}
       <div className="wrap" style={{ marginBottom: "clamp(6rem, 12vw, 12rem)" }}>
-        <div ref={imgRef1} className="phil-img-hover relative w-full overflow-hidden cursor-pointer" style={{ height: "clamp(350px, 55vh, 700px)" }}>
+        <div ref={imgRef1} className="phil-img-hover relative w-full overflow-hidden cursor-pointer tap-active" style={{ height: "clamp(350px, 55vh, 700px)" }}
+          onClick={() => openZoom("/photo-1616046229478-9901c5536a45.avif")}
+        >
           <div className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ backgroundImage: 'url("/photo-1616046229478-9901c5536a45.avif")', height: "120%", top: "-10%" }} />
           <div className="phil-img1-overlay absolute inset-0 bg-gradient-to-t from-bg-2/50 to-transparent" style={{ opacity: 0 }} />
           <div className="phil-img1-border absolute inset-0 border border-text/10 pointer-events-none" style={{ margin: "clamp(1rem, 2vw, 1.5rem)", transform: "scaleX(0) scaleY(0)", opacity: 0 }} />
+          <div className="absolute bottom-4 right-4 md:hidden flex items-center gap-2 text-white/60 text-xs pointer-events-none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
+            <span>Tap to zoom</span>
+          </div>
         </div>
       </div>
 
-      {/* LAYER 5: Stats */}
       <div className="divider" />
       <div className="phil-stats" style={{ paddingTop: "clamp(6rem, 12vw, 12rem)", paddingBottom: "clamp(6rem, 12vw, 12rem)" }}>
         <div className="wrap">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+          <div className="hidden md:grid md:grid-cols-3 gap-0">
             {stats.map((s, i) => (
               <div key={i} className="stat-card relative cursor-default" style={{ padding: "clamp(3rem, 6vw, 6rem) clamp(4rem, 8vw, 8rem)", borderRadius: "8px", transition: "box-shadow 0.5s ease" }}>
                 <div className="stat-glow absolute inset-0 rounded-lg bg-accent-dim opacity-0 scale-80 pointer-events-none transition-none" />
@@ -236,19 +256,46 @@ export default function Philosophy() {
               </div>
             ))}
           </div>
+          <div className="md:hidden flex overflow-x-auto scroll-snap-x gap-4 -mx-6 px-6" ref={statsScrollRef} style={{ paddingBottom: "1rem" }}>
+            {stats.map((s, i) => (
+              <div key={i} className="stat-card relative cursor-default flex-shrink-0 scroll-snap-center" style={{ minWidth: "80vw", padding: "clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3rem)", borderRadius: "12px", background: "var(--color-surface)", borderTop: "2px solid var(--color-accent/20)" }}>
+                <div className="stat-glow absolute inset-0 rounded-lg bg-accent-dim opacity-0 scale-80 pointer-events-none transition-none" />
+                <div className="stat-num t-stat text-text" style={{ transition: "color 0.4s ease" }}>0{s.suffix}</div>
+                <p className="t-caption text-accent" style={{ marginTop: "clamp(1.25rem, 2.5vw, 2rem)", marginBottom: "clamp(0.5rem, 1vw, 1rem)" }}>{s.label}</p>
+                <p className="text-[0.78rem] text-muted tracking-wide">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="md:hidden flex items-center justify-center gap-2" style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)" }}>
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  activeStat === i ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-text-15"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* LAYER 6: Image 2 */}
       <div className="wrap" style={{ marginTop: "clamp(6rem, 12vw, 12rem)", marginBottom: "clamp(6rem, 12vw, 12rem)" }}>
-        <div ref={imgRef2} className="phil-img-hover relative w-full overflow-hidden cursor-pointer" style={{ height: "clamp(300px, 45vh, 550px)" }}>
+        <div ref={imgRef2} className="phil-img-hover relative w-full overflow-hidden cursor-pointer tap-active" style={{ height: "clamp(300px, 45vh, 550px)" }}
+          onClick={() => openZoom("/photo-1618221195710-dd6b41faaea6.avif")}
+        >
           <div className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ backgroundImage: 'url("/photo-1618221195710-dd6b41faaea6.avif")', height: "120%", top: "-10%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-bg-2/50 to-transparent" />
           <div className="phil-img2-border absolute inset-0 border border-text/10 pointer-events-none" style={{ margin: "clamp(1rem, 2vw, 1.5rem)", transform: "scaleX(0)", opacity: 0 }} />
+          <div className="absolute bottom-4 right-4 md:hidden flex items-center gap-2 text-white/60 text-xs pointer-events-none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
+            <span>Tap to zoom</span>
+          </div>
         </div>
       </div>
 
       <div className="divider" />
+
+      <ImageModal src={zoomedImage || ""} isOpen={zoomedImage !== null} onClose={closeZoom} />
     </section>
   );
 }
