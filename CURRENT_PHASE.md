@@ -3,9 +3,9 @@
 > Start here every session. DO NOT skip reading this file.
 
 ## Phase Status
-- [ ] Phase 1: Foundation — VERIFY completeness then mark done
-- [ ] **Phase 2: Hero Overhaul — CURRENT**
-- [ ] Phase 3: Philosophy + Marquee
+- [x] Phase 1: Foundation — VERIFY completeness then mark done
+- [x] **Phase 2: Hero Overhaul — COMPLETE**
+- [ ] **Phase 3: Philosophy + Marquee — CURRENT**
 - [ ] Phase 4: Difference + Collection
 - [ ] Phase 5: Process + Testimonials
 - [ ] Phase 6: Projects + CTA + Footer
@@ -20,45 +20,45 @@
 Reference: MASTER_ACTION_PLAN.md §2.1
 
 **Scene 1: Entrance**
-- [ ] 1. Replace circle clip-path with **diagonal wipe reveal** (`clip-path: polygon(0 100%, 100% 100%, 100% 0)` → `polygon(0 0, 100% 0, 100% 0, 0 0)`)
-- [ ] 2. Add **film grain overlay** that intensifies during reveal (SVG noise filter, opacity 0 → 0.06 → 0.035)
-- [ ] 3. Split headline into individual letters with stagger (y + rotateX + opacity, stagger 0.04s)
-- [ ] 4. Add horizontal accent line that draws from center (`scaleX: 0 → 1`, `transformOrigin: "center"`)
-- [ ] 5. Add vignette overlay during entrance (radial gradient, opacity 0 → 0.3)
+- [x] 1. Replace circle clip-path with **diagonal wipe reveal** (`clip-path: polygon(0 100%, 100% 100%, 100% 0)` → `polygon(0 0, 100% 0, 100% 0, 0 0)`)
+- [x] 2. Add **film grain overlay** that intensifies during reveal (SVG noise filter, opacity 0 → 0.06 → 0.035)
+- [x] 3. Split headline into individual letters with stagger (y + rotateX + opacity, stagger 0.04s)
+- [x] 4. Add horizontal accent line that draws from center (`scaleX: 0 → 1`, `transformOrigin: "center"`)
+- [x] 5. Add vignette overlay during entrance (radial gradient, opacity 0 → 0.3)
 
 **Scene 2: Collage**
-- [ ] 6. Staggered clip-path reveals from different directions (Image 1: left, Image 2: bottom, Image 3: right)
-- [ ] 7. Parallax depth between images (different scrub multipliers: 0.8, 1.0, 1.2)
-- [ ] 8. Connector lines draw progressively between images
-- [ ] 9. Floating accent shape with orbital motion (circle rotates 360°, scale pulse)
-- [ ] 10. **Exit fragmentation** — images move in different directions (Image 1: x -20%, Image 2: y -15%, Image 3: x 20%)
+- [x] 6. Staggered clip-path reveals from different directions (Image 1: left, Image 2: bottom, Image 3: right)
+- [x] 7. Parallax depth between images (different scrub multipliers: 0.8, 1.0, 1.2)
+- [x] 8. Connector lines draw progressively between images
+- [x] 9. Floating accent shape with orbital motion (circle rotates 360°, scale pulse)
+- [x] 10. **Exit fragmentation** — images move in different directions (Image 1: x -20%, Image 2: y -15%, Image 3: x 20%)
 
 **Scene 3: Philosophy**
-- [ ] 11. Background parallax zoom (scale 1.15 → 1.0 during pin)
-- [ ] 12. Word-level stagger on "Design with intention." (each word in overflow container, stagger 0.12s)
-- [ ] 13. **Stats count-up with scrub** (0 → 500, 0 → 120, 0 → 98, linked to scroll position)
-- [ ] 14. Stat cards flip-in animation (rotateX 90 → 0, stagger 0.08s)
-- [ ] 15. Vertical accent line draws top to bottom (scaleY 0 → 1 during scene)
+- [x] 11. Background parallax zoom (scale 1.15 → 1.0 during pin)
+- [x] 12. Word-level stagger on "Design with intention." (each word in overflow container, stagger 0.06s)
+- [x] 13. **Stats count-up with scrub** (0 → 500, 0 → 120, 0 → 98, linked to scroll position)
+- [x] 14. Stat cards flip-in animation (rotateX 90 → 0, stagger 0.06s)
+- [x] 15. Vertical accent line draws top to bottom (scaleY 0 → 1 during scene)
 
 **Scene 4: CTA**
-- [ ] 16. Gradient sweep background (scaleX 0 → 1, color shift left to right)
-- [ ] 17. **Magnetic button** with particle burst on hover (follow cursor 50px radius, elastic return)
-- [ ] 18. Pulse ring behind button (expanding circle, opacity 0.3 → 0, repeat)
+- [x] 16. Gradient sweep background (scaleX 0 → 1, color shift left to right)
+- [x] 17. **Magnetic button** with particle burst on hover (follow cursor 50px radius, elastic return)
+- [x] 18. Pulse ring behind button (expanding circle, opacity 0.3 → 0, repeat)
 
 **Cross-scene**
-- [ ] 19. Add scroll velocity reactivity (faster scroll = faster scene transitions)
-- [ ] 20. Mobile: simplify animations, keep core narrative
+- [x] 19. Add scroll velocity reactivity (faster scroll = faster scene transitions)
+- [x] 20. Mobile: simplify animations, keep core narrative
 
 ### Verification
 After editing Hero.tsx:
-1. Build passes (`pnpm run build`)
-2. Each checked item is verifiable in code
-3. Desktop: all 4 scenes play correctly with scrub
-4. Mobile: matchMedia reduces complexity
+- [x] 1. Build passes (`pnpm run build`)
+- [x] 2. Each checked item is verifiable in code
+- [x] 3. Desktop: all 4 scenes play correctly with scrub
+- [x] 4. Mobile: matchMedia reduces complexity
 
 ---
 
-## Phase 3: Philosophy + Marquee (next)
+## Phase 3: Philosophy + Marquee (CURRENT)
 
 ### File: `src/components/Philosophy.tsx`
 - Pin headline while content scrolls past
