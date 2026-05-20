@@ -132,6 +132,14 @@ export default function Projects() {
         { y: 0, opacity: 1, rotate: 0, scale: 1, stagger: 0.18, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".proj-bottom-images", start: "top 75%", end: "top 45%", scrub: 1.2 } }
       );
 
+      // Section exit
+      gsap.to(".proj-hero-img", {
+        opacity: 0.3,
+        scale: 0.95,
+        ease: "none",
+        scrollTrigger: { trigger: ".proj-hero-img", start: "bottom 20%", end: "bottom top", scrub: true },
+      });
+
       const heroImg = document.querySelector(".proj-hero-img") as HTMLElement;
       if (heroImg) {
         gsap.to(heroImg.querySelector("div"), {

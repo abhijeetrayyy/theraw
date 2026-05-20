@@ -113,6 +113,28 @@ export default function Footer() {
         gsap.to(el, { scale: 1, duration: 0.4, ease: "power2.out" });
       });
     });
+
+    // Brand letter hover
+    gsap.utils.toArray(".foot-brand-letter").forEach((letter) => {
+      const el = letter as HTMLElement;
+      el.addEventListener("mouseenter", () => {
+        gsap.to(el, { scale: 1.1, color: "var(--color-accent)", duration: 0.3, ease: "power2.out" });
+      });
+      el.addEventListener("mouseleave", () => {
+        gsap.to(el, { scale: 1, color: "var(--color-text)", duration: 0.4, ease: "power2.out" });
+      });
+    });
+
+    // Link hover underline
+    gsap.utils.toArray(".foot-link").forEach((link) => {
+      const el = link as HTMLElement;
+      el.addEventListener("mouseenter", () => {
+        gsap.to(el, { x: 8, color: "var(--color-text)", duration: 0.3, ease: "power2.out" });
+      });
+      el.addEventListener("mouseleave", () => {
+        gsap.to(el, { x: 0, color: "var(--color-text-50)", duration: 0.3, ease: "power2.out" });
+      });
+    });
   }, { scope: footer });
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

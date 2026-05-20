@@ -50,6 +50,15 @@ export default function Cta() {
 
     tl.fromTo(".cta-btn-wrap", { y: 45, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out" }, 1.1);
 
+    // Section exit
+    gsap.to(".cta-heading-word", {
+      y: -30,
+      opacity: 0.3,
+      stagger: 0.05,
+      ease: "none",
+      scrollTrigger: { trigger: section.current, start: "bottom 20%", end: "bottom top", scrub: true },
+    });
+
     mm.add("(min-width: 1024px)", () => {
       tl.fromTo(".cta-side-img-left",
         { clipPath: "inset(0 100% 0 0)", scale: 1.15, filter: "blur(10px)" },
