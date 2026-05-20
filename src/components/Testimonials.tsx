@@ -17,6 +17,7 @@ export default function Testimonials() {
   const section = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeCard, setActiveCard] = useState(0);
+  const dotsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!scrollRef.current) return;
@@ -81,18 +82,18 @@ export default function Testimonials() {
         const quoteMarkTop = card.querySelector(".test-quote-mark-top") as HTMLElement;
         const quoteMarkBottom = card.querySelector(".test-quote-mark-bottom") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 65%", end: "top 15%", scrub: 1.5 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 70%", end: "top 20%", scrub: 1.5 } });
 
-        tl.fromTo(card, { rotateY: (i as number) % 2 === 0 ? -10 : 10, opacity: 0, scale: 0.9 }, { rotateY: 0, opacity: 1, scale: 1, duration: 1.4, ease: "power3.out" }, 0);
+        tl.fromTo(card, { y: 80, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" }, 0);
 
-        if (quoteMarkTop) tl.fromTo(quoteMarkTop, { scale: 0, opacity: 0, rotation: -90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: "back.out(3)" }, 0.2);
-        if (quoteMarkBottom) tl.fromTo(quoteMarkBottom, { scale: 0, opacity: 0, rotation: 90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: "back.out(3)" }, 0.3);
+        if (quoteMarkTop) tl.fromTo(quoteMarkTop, { scale: 0, opacity: 0, rotation: -90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: "back.out(3)" }, 0.15);
+        if (quoteMarkBottom) tl.fromTo(quoteMarkBottom, { scale: 0, opacity: 0, rotation: 90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: "back.out(3)" }, 0.25);
 
         if (quote) {
           tl.fromTo(quote.querySelectorAll("span"),
             { y: 35, opacity: 0, rotateX: -25 },
             { y: 0, opacity: 1, rotateX: 0, stagger: 0.04, duration: 0.8, ease: "power3.out" },
-            0.35
+            0.3
           );
         }
 
@@ -105,16 +106,18 @@ export default function Testimonials() {
         }
 
         if (img) {
-          tl.fromTo(img, { scale: 0, clipPath: "circle(0% at 50% 50%)" }, { scale: 1, clipPath: "circle(100% at 50% 50%)", duration: 0.9, ease: "power3.out" }, 0.6);
+          tl.fromTo(img, { scale: 0, clipPath: "circle(0% at 50% 50%)" }, { scale: 1, clipPath: "circle(100% at 50% 50%)", duration: 0.9, ease: "power3.out" }, 0.55);
         }
 
         gsap.to(card, { yPercent: -4, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
 
         card.addEventListener("mouseenter", () => {
-          gsap.to(card, { y: -10, boxShadow: "0 25px 50px rgba(0,0,0,0.08)", borderColor: "var(--color-accent/25)", duration: 0.5, ease: "power2.out" });
+          gsap.to(card, { y: -12, boxShadow: "0 30px 60px rgba(0,0,0,0.08)", borderColor: "var(--color-accent/30)", duration: 0.5, ease: "power2.out" });
+          gsap.to(card.querySelector(".test-card-accent"), { scaleY: 1, duration: 0.4, ease: "power2.out" });
         });
         card.addEventListener("mouseleave", () => {
-          gsap.to(card, { y: 0, boxShadow: "none", borderColor: "var(--color-text-08)", duration: 0.5, ease: "power2.out" });
+          gsap.to(card, { y: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.04)", borderColor: "var(--color-text-08)", duration: 0.5, ease: "power2.out" });
+          gsap.to(card.querySelector(".test-card-accent"), { scaleY: 0, duration: 0.4, ease: "power2.out" });
         });
       });
     });
@@ -127,9 +130,9 @@ export default function Testimonials() {
         const img = card.querySelector(".test-author-img") as HTMLElement;
         const quoteMarkTop = card.querySelector(".test-quote-mark-top") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "left 75%", end: "left 25%", scrub: 1 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "left 70%", end: "left 30%", scrub: 1 } });
 
-        tl.fromTo(card, { y: 40, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out" }, 0);
+        tl.fromTo(card, { y: 50, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out" }, 0);
 
         if (quoteMarkTop) tl.fromTo(quoteMarkTop, { scale: 0, opacity: 0, rotation: -60 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: "back.out(3)" }, 0.15);
 
@@ -178,30 +181,60 @@ export default function Testimonials() {
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible scroll-snap-x gap-4 md:gap-0 -mx-6 px-6 md:-mx-0 md:px-0" style={{ paddingBottom: "1.5rem" }}>
+          {/* Desktop: 3-column grid */}
+          <div className="hidden md:grid md:grid-cols-3" style={{ gap: "clamp(2rem, 4vw, 3rem)" }}>
             {testimonials.map((t, i) => (
-              <div key={i} className="test-card relative flex-shrink-0 scroll-snap-center" style={{ minWidth: "85vw", padding: "clamp(2rem, 5vw, 3rem)", borderRadius: "12px", background: "var(--color-surface)", border: "1px solid var(--color-text-08)", transition: "border-color 0.5s ease, box-shadow 0.5s ease", boxShadow: activeCard === i ? "0 8px 30px var(--color-accent/10)" : "0 2px 8px rgba(0,0,0,0.04)", borderColor: activeCard === i ? "var(--color-accent/30)" : "var(--color-text-08)" }} onTouchStart={handleTestimonialTouch}>
-                <div className="test-quote-mark-top absolute -top-2 left-6 text-5xl font-serif text-accent/15 leading-none select-none">&ldquo;</div>
-                <div style={{ paddingTop: "clamp(2.5rem, 5vw, 4rem)" }}>
-                  <div className="test-quote-text" style={{ marginBottom: "clamp(3rem, 6vw, 5rem)" }}>
-                    {t.quote.split(" ").map((w, wi) => (<span key={wi} className="inline-block mr-[0.3em] text-text-70" style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.05rem)", lineHeight: 1.7 }}>{w}</span>))}
+              <div key={i} className="test-card relative cursor-default" style={{ padding: "clamp(2.5rem, 4vw, 3rem)", borderRadius: "12px", background: "var(--color-surface)", border: "1px solid var(--color-text-08)", borderTop: "3px solid var(--color-accent/40)", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", transition: "all 0.5s ease", overflow: "hidden" }}>
+                <div className="test-card-accent absolute top-0 left-0 right-0 h-[3px] bg-accent origin-top" style={{ transform: "scaleY(0)" }} />
+                <div className="test-quote-mark-top absolute top-4 right-6 text-6xl font-serif text-accent/10 leading-none select-none">&ldquo;</div>
+                <div style={{ paddingTop: "clamp(2rem, 4vw, 3rem)" }}>
+                  <div className="test-quote-text" style={{ marginBottom: "clamp(3rem, 5vw, 4rem)" }}>
+                    {t.quote.split(" ").map((w, wi) => (<span key={wi} className="inline-block mr-[0.3em] text-text-70" style={{ fontSize: "clamp(0.9rem, 1.2vw, 1.02rem)", lineHeight: 1.7 }}>{w}</span>))}
                   </div>
-                  <div className="test-author flex items-center" style={{ gap: "clamp(1rem, 2vw, 1.5rem)" }}>
-                    <div className="test-author-img w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden bg-text-08 flex-shrink-0 border-2 border-accent/20">
-                      <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${t.img})` }} />
-                    </div>
-                    <div>
-                      <p className="t-label text-text" style={{ fontSize: "0.65rem" }}>{t.name}</p>
-                      <p className="text-xs text-text-30">{t.role}</p>
+                  <div className="absolute bottom-0 left-0 right-0" style={{ padding: "clamp(2rem, 4vw, 3rem)", borderTop: "1px solid var(--color-text-08)" }}>
+                    <div className="test-author flex items-center" style={{ gap: "clamp(1rem, 2vw, 1.5rem)" }}>
+                      <div className="test-author-img w-14 h-14 rounded-full overflow-hidden bg-text-08 flex-shrink-0 border-2 border-accent/20">
+                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${t.img})` }} />
+                      </div>
+                      <div>
+                        <p className="t-label text-text">{t.name}</p>
+                        <p className="text-sm text-text-30">{t.role}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="test-quote-mark-bottom absolute bottom-2 right-4 text-4xl font-serif text-accent/10 leading-none select-none md:block hidden">&rdquo;</div>
+                <div className="test-quote-mark-bottom absolute bottom-20 right-4 text-4xl font-serif text-accent/10 leading-none select-none">&rdquo;</div>
               </div>
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-2 md:hidden" style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)" }}>
+          {/* Mobile: horizontal scroll carousel */}
+          <div ref={scrollRef} className="flex md:hidden overflow-x-auto scroll-snap-x gap-5 -mx-6 px-6" style={{ paddingBottom: "1.5rem", scrollPaddingInline: "24px" }}>
+            {testimonials.map((t, i) => (
+              <div key={i} className="test-card relative flex-shrink-0 scroll-snap-center tap-active" style={{ minWidth: "85vw", maxWidth: "85vw", padding: "clamp(2rem, 5vw, 2.5rem)", borderRadius: "16px", background: "var(--color-surface)", border: activeCard === i ? "1.5px solid var(--color-accent/40)" : "1px solid var(--color-text-08)", borderTop: activeCard === i ? "3px solid var(--color-accent)" : "3px solid var(--color-accent/30)", boxShadow: activeCard === i ? "0 12px 40px var(--color-accent/12)" : "0 2px 8px rgba(0,0,0,0.04)", transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }} onTouchStart={handleTestimonialTouch}>
+                <div className="test-quote-mark-top absolute top-4 right-5 text-5xl font-serif text-accent/12 leading-none select-none">&ldquo;</div>
+                <div style={{ paddingTop: "clamp(1.5rem, 4vw, 2.5rem)" }}>
+                  <div className="test-quote-text" style={{ marginBottom: "clamp(2.5rem, 5vw, 3.5rem)" }}>
+                    {t.quote.split(" ").map((w, wi) => (<span key={wi} className="inline-block mr-[0.3em] text-text-70" style={{ fontSize: "clamp(0.9rem, 2.8vw, 1rem)", lineHeight: 1.7 }}>{w}</span>))}
+                  </div>
+                  <div style={{ paddingTop: "clamp(1.5rem, 3vw, 2rem)", borderTop: "1px solid var(--color-text-08)" }}>
+                    <div className="test-author flex items-center" style={{ gap: "clamp(0.8rem, 2vw, 1.2rem)" }}>
+                      <div className="test-author-img w-12 h-12 rounded-full overflow-hidden bg-text-08 flex-shrink-0 border-2 border-accent/20">
+                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${t.img})` }} />
+                      </div>
+                      <div>
+                        <p className="t-label text-text" style={{ fontSize: "0.6rem" }}>{t.name}</p>
+                        <p className="text-xs text-text-30">{t.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile: dot indicators */}
+          <div ref={dotsRef} className="flex items-center justify-center gap-2 md:hidden" style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)" }}>
             {testimonials.map((_, i) => (
               <div
                 key={i}
