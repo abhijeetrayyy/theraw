@@ -142,13 +142,14 @@ export default function Collection() {
         const title = el.querySelector(".coll-card-title") as HTMLElement;
         const badge = el.querySelector(".coll-card-badge") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 70%", end: "top 15%", scrub: 1.2 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 75%", end: "top 15%", scrub: 1.2 } });
 
         if (badge) tl.fromTo(badge, { scale: 0, opacity: 0, rotation: -180 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: "back.out(3)" }, 0);
         if (inner) tl.fromTo(inner, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: "power3.out" }, 0.1);
         if (tag) tl.fromTo(tag, { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.3);
         if (title) tl.fromTo(title, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.35);
 
+        // Mobile touch feedback
         el.addEventListener("touchstart", () => {
           if (navigator.vibrate) navigator.vibrate(5);
           const desc = el.querySelector(".coll-card-desc") as HTMLElement;
@@ -165,6 +166,11 @@ export default function Collection() {
               if (imgInner) gsap.to(imgInner, { scale: 1.05, duration: 0.5 });
             }
           }
+          // Card scale feedback
+          gsap.to(el, { scale: 0.98, duration: 0.2 });
+        }, { passive: true });
+        el.addEventListener("touchend", () => {
+          gsap.to(el, { scale: 1, duration: 0.3 });
         }, { passive: true });
       });
 
@@ -181,6 +187,19 @@ export default function Collection() {
           },
         });
       }
+
+      // Mobile image parallax on cards
+      gsap.utils.toArray(".coll-card-inner").forEach((inner) => {
+        const el = inner as HTMLElement;
+        const imgDiv = el.querySelector("div") as HTMLElement;
+        if (imgDiv) {
+          gsap.to(imgDiv, {
+            yPercent: -8,
+            ease: "none",
+            scrollTrigger: { trigger: el.closest(".coll-card"), start: "top bottom", end: "bottom top", scrub: true },
+          });
+        }
+      });
     });
   }, { scope: section });
 

@@ -118,7 +118,7 @@ export default function Difference() {
         const num = card.querySelector(".diff-card-num") as HTMLElement;
         const numLarge = card.querySelector(".diff-card-num-large") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 65%", end: "top 15%", scrub: 1.5 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 70%", end: "top 15%", scrub: 1.5 } });
 
         if (line) tl.fromTo(line, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.8, ease: "power2.inOut" }, 0);
         if (num) tl.fromTo(num, { scale: 0, opacity: 0, rotate: -30 }, { scale: 1, opacity: 1, rotate: 0, duration: 0.6, ease: "back.out(3)" }, 0.1);
@@ -139,12 +139,34 @@ export default function Difference() {
             0.5
           );
         }
+
+        // Mobile tap feedback
+        card.addEventListener("touchstart", () => {
+          if (navigator.vibrate) navigator.vibrate(5);
+          if (img) gsap.to(img, { scale: 0.98, duration: 0.3 });
+        }, { passive: true });
+        card.addEventListener("touchend", () => {
+          if (img) gsap.to(img, { scale: 1, duration: 0.4 });
+        }, { passive: true });
       });
 
       gsap.to(".diff-mobile-bg-num", {
         y: -50,
         ease: "none",
         scrollTrigger: { trigger: ".diff-cards", start: "top bottom", end: "bottom top", scrub: true },
+      });
+
+      // Mobile image parallax
+      gsap.utils.toArray(".diff-card-img").forEach((imgWrap) => {
+        const el = imgWrap as HTMLElement;
+        const inner = el.querySelector("div") as HTMLElement;
+        if (inner) {
+          gsap.to(inner, {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
+          });
+        }
       });
     });
   }, { scope: section });
@@ -183,7 +205,7 @@ export default function Difference() {
             <div key={i} className="diff-card grid grid-cols-1 md:grid-cols-12 cursor-default" style={{ gap: "clamp(3rem, 6vw, 6rem)", transformStyle: "preserve-3d", perspective: "1200px" }}>
               <div className="md:col-span-12"><div className="diff-card-line w-full h-[1px] bg-text-08 origin-left" /></div>
               <div className={`md:col-span-6 ${i % 2 === 1 ? "md:order-2 md:col-start-7" : ""}`}>
-                <div className="diff-card-img relative w-full aspect-[4/3] overflow-hidden rounded-lg">
+                <div className="diff-card-img relative w-full aspect-[4/3] overflow-hidden rounded-xl tap-ripple">
                   <div className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ backgroundImage: `url(${f.img})`, height: "120%", top: "-10%" }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-bg/40 to-transparent" />
                   <span className="diff-card-num-large absolute bottom-6 right-8 font-serif text-[5rem] md:text-[7rem] text-text/[0.04] leading-none select-none">{f.num}</span>

@@ -211,7 +211,7 @@ export default function Testimonials() {
           {/* Mobile: horizontal scroll carousel */}
           <div ref={scrollRef} className="flex md:hidden overflow-x-auto scroll-snap-x gap-5 -mx-6 px-6" style={{ paddingBottom: "1.5rem", scrollPaddingInline: "24px" }}>
             {testimonials.map((t, i) => (
-              <div key={i} className="test-card relative flex-shrink-0 scroll-snap-center tap-active" style={{ minWidth: "85vw", maxWidth: "85vw", padding: "clamp(2rem, 5vw, 2.5rem)", borderRadius: "16px", background: "var(--color-surface)", border: activeCard === i ? "1.5px solid var(--color-accent/40)" : "1px solid var(--color-text-08)", borderTop: activeCard === i ? "3px solid var(--color-accent)" : "3px solid var(--color-accent/30)", boxShadow: activeCard === i ? "0 12px 40px var(--color-accent/12)" : "0 2px 8px rgba(0,0,0,0.04)", transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }} onTouchStart={handleTestimonialTouch}>
+              <div key={i} className="test-card relative flex-shrink-0 scroll-snap-center tap-ripple" style={{ minWidth: "85vw", maxWidth: "85vw", padding: "clamp(2rem, 5vw, 2.5rem)", borderRadius: "16px", background: "var(--color-surface)", border: activeCard === i ? "1.5px solid var(--color-accent/40)" : "1px solid var(--color-text-08)", borderTop: activeCard === i ? "3px solid var(--color-accent)" : "3px solid var(--color-accent/30)", boxShadow: activeCard === i ? "0 12px 40px var(--color-accent/12)" : "0 2px 8px rgba(0,0,0,0.04)", transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }} onTouchStart={handleTestimonialTouch}>
                 <div className="test-quote-mark-top absolute top-4 right-5 text-5xl font-serif text-accent/12 leading-none select-none">&ldquo;</div>
                 <div style={{ paddingTop: "clamp(1.5rem, 4vw, 2.5rem)" }}>
                   <div className="test-quote-text" style={{ marginBottom: "clamp(2.5rem, 5vw, 3.5rem)" }}>
@@ -239,7 +239,7 @@ export default function Testimonials() {
               <div
                 key={i}
                 className={`rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  i === activeCard ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-text-15"
+                  i === activeCard ? "w-6 h-2 bg-accent dot-pulse" : "w-2 h-2 bg-text-15"
                 }`}
               />
             ))}

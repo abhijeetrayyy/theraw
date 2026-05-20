@@ -28,6 +28,7 @@ function MobileAccordion({ title, children }: { title: string; children: React.R
 
   const toggle = () => {
     setOpen(!open);
+    if (navigator.vibrate) navigator.vibrate(5);
     if (contentRef.current) {
       if (!open) {
         gsap.fromTo(contentRef.current.children, { x: -15, opacity: 0 }, { x: 0, opacity: 1, stagger: 0.06, duration: 0.4, ease: "power3.out" });

@@ -174,7 +174,7 @@ export default function Projects() {
         const content = card.querySelector(".proj-content") as HTMLElement;
         const arrow = card.querySelector(".proj-arrow") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 70%", end: "top 20%", scrub: 1.2 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 75%", end: "top 20%", scrub: 1.2 } });
 
         if (img) {
           tl.fromTo(img,
@@ -196,18 +196,21 @@ export default function Projects() {
           tl.fromTo(arrow, { scale: 0, opacity: 0, rotation: -30 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.4, ease: "back.out(3)" }, 0.6);
         }
 
+        // Mobile touch feedback with premium scale
         card.addEventListener("touchstart", () => {
           if (navigator.vibrate) navigator.vibrate(5);
           const imgInner = img?.querySelector("div");
           const overlay = card.querySelector(".proj-overlay") as HTMLElement;
-          if (imgInner) gsap.to(imgInner, { scale: 1.05, duration: 0.4, ease: "power2.out" });
-          if (overlay) gsap.to(overlay, { opacity: 0.6, duration: 0.4 });
+          if (imgInner) gsap.to(imgInner, { scale: 1.08, duration: 0.4, ease: "power2.out" });
+          if (overlay) gsap.to(overlay, { opacity: 0.65, duration: 0.4 });
+          gsap.to(card, { scale: 0.98, duration: 0.2 });
         }, { passive: true });
         card.addEventListener("touchend", () => {
           const imgInner = img?.querySelector("div");
           const overlay = card.querySelector(".proj-overlay") as HTMLElement;
           if (imgInner) gsap.to(imgInner, { scale: 1, duration: 0.5, ease: "power2.out" });
           if (overlay) gsap.to(overlay, { opacity: 0.3, duration: 0.5 });
+          gsap.to(card, { scale: 1, duration: 0.3 });
         }, { passive: true });
       });
 
@@ -225,6 +228,29 @@ export default function Projects() {
         { y: 40, opacity: 0, rotate: 6, scale: 0.9 },
         { y: 0, opacity: 1, rotate: 0, scale: 1, stagger: 0.15, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".proj-bottom-images", start: "top 75%" } }
       );
+
+      // Mobile image parallax on cards
+      gsap.utils.toArray(".proj-img").forEach((imgWrap) => {
+        const el = imgWrap as HTMLElement;
+        const inner = el.querySelector("div") as HTMLElement;
+        if (inner) {
+          gsap.to(inner, {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: { trigger: el.closest(".proj-card"), start: "top bottom", end: "bottom top", scrub: true },
+          });
+        }
+      });
+
+      // Mobile hero image parallax
+      const heroImg = document.querySelector(".proj-hero-img") as HTMLElement;
+      if (heroImg) {
+        gsap.to(heroImg.querySelector("div"), {
+          yPercent: -12,
+          ease: "none",
+          scrollTrigger: { trigger: heroImg, start: "top bottom", end: "bottom top", scrub: true },
+        });
+      }
     });
   }, { scope: section });
 
@@ -272,7 +298,7 @@ export default function Projects() {
 
           <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "clamp(3rem, 6vw, 4rem)", marginBottom: "clamp(3rem, 6vw, 4rem)" }}>
             {projects.slice(0, 2).map((p, i) => (
-              <div key={i} className="proj-card relative overflow-hidden cursor-pointer group tap-active" style={{ transformStyle: "preserve-3d", perspective: "1200px", borderRadius: "8px" }}
+              <div key={i} className="proj-card relative overflow-hidden cursor-pointer group tap-ripple" style={{ transformStyle: "preserve-3d", perspective: "1200px", borderRadius: "12px" }}
                 onClick={() => openZoom(p.img)}
               >
                 <div className="proj-img w-full aspect-[4/3] overflow-hidden">
@@ -311,7 +337,7 @@ export default function Projects() {
 
           <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "clamp(3rem, 6vw, 4rem)" }}>
             {projects.slice(2).map((p, i) => (
-              <div key={i + 2} className="proj-card relative overflow-hidden cursor-pointer group tap-active" style={{ transformStyle: "preserve-3d", perspective: "1200px", borderRadius: "8px" }}
+              <div key={i + 2} className="proj-card relative overflow-hidden cursor-pointer group tap-ripple" style={{ transformStyle: "preserve-3d", perspective: "1200px", borderRadius: "12px" }}
                 onClick={() => openZoom(p.img)}
               >
                 <div className="proj-img w-full aspect-[4/3] overflow-hidden">

@@ -525,3 +525,151 @@ body {
 .will-change-auto {
   will-change: auto !important;
 }
+
+/* ─────────────────── PREMIUM MOBILE UTILITIES ─────────────────── */
+@media (max-width: 1023px) {
+  /* Section reveal animation base */
+  .mobile-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .mobile-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Premium card glow on active/touch */
+  .mobile-card-glow {
+    position: relative;
+  }
+  .mobile-card-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(139, 105, 20, 0.2) 0%, transparent 50%, rgba(139, 105, 20, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .mobile-card-glow.active::before {
+    opacity: 1;
+  }
+
+  /* Subtle image parallax container */
+  .mobile-parallax {
+    overflow: hidden;
+    will-change: transform;
+  }
+  .mobile-parallax > div {
+    will-change: transform;
+    transition: transform 0.1s linear;
+  }
+
+  /* Premium tap ripple effect */
+  .tap-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  .tap-ripple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(139, 105, 20, 0.15) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    pointer-events: none;
+  }
+  .tap-ripple:active::after {
+    transform: scale(2.5);
+    opacity: 1;
+    transition: transform 0s, opacity 0s;
+  }
+
+  /* Staggered text reveal */
+  .mobile-text-reveal span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .mobile-text-reveal.revealed span {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Premium bottom sheet style */
+  .mobile-bottom-sheet {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(250, 248, 245, 0.95);
+  }
+
+  /* Scroll velocity skew effect */
+  .velocity-skew {
+    will-change: transform;
+    transition: transform 0.3s ease-out;
+  }
+
+  /* Premium divider with gradient */
+  .premium-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--color-text-08) 20%, var(--color-text-08) 80%, transparent 100%);
+  }
+
+  /* Active dot pulse animation */
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--color-accent/40); }
+    50% { box-shadow: 0 0 0 6px var(--color-accent/0); }
+  }
+  .dot-pulse {
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  /* Premium number counter style */
+  .mobile-counter {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Smooth image loading */
+  .mobile-img-loading {
+    background: var(--color-bg-2);
+    transition: opacity 0.5s ease;
+  }
+  .mobile-img-loaded {
+    opacity: 1;
+  }
+
+  /* Premium shadow variants */
+  .mobile-shadow-sm {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .mobile-shadow-md {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+  }
+  .mobile-shadow-lg {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+  }
+  .mobile-shadow-glow {
+    box-shadow: 0 0 0 1px rgba(139, 105, 20, 0.1), 0 8px 32px rgba(139, 105, 20, 0.12);
+  }
+
+  /* Premium gradient text */
+  .mobile-gradient-text {
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Smooth height transitions */
+  .mobile-height-transition {
+    transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}

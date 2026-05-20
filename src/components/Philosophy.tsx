@@ -119,6 +119,33 @@ export default function Philosophy() {
         y: -30, ease: "none",
         scrollTrigger: { trigger: ".phil-quote", start: "top bottom", end: "bottom top", scrub: true },
       });
+
+      // Mobile stat card glow on active
+      const statCards = gsap.utils.toArray(".stat-card") as HTMLElement[];
+      statCards.forEach((card) => {
+        card.addEventListener("touchstart", () => {
+          if (navigator.vibrate) navigator.vibrate(5);
+          gsap.to(card.querySelector(".stat-glow"), { opacity: 0.6, scale: 1, duration: 0.4 });
+          gsap.to(card.querySelector(".stat-num"), { color: "var(--color-accent)", duration: 0.3 });
+        }, { passive: true });
+        card.addEventListener("touchend", () => {
+          gsap.to(card.querySelector(".stat-glow"), { opacity: 0, scale: 0.8, duration: 0.5 });
+          gsap.to(card.querySelector(".stat-num"), { color: "var(--color-text)", duration: 0.4 });
+        }, { passive: true });
+      });
+
+      // Mobile image parallax enhancement
+      gsap.utils.toArray(".phil-img-hover").forEach((imgWrap) => {
+        const el = imgWrap as HTMLElement;
+        const inner = el.querySelector("div") as HTMLElement;
+        if (inner) {
+          gsap.to(inner, {
+            yPercent: -8,
+            ease: "none",
+            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
+          });
+        }
+      });
     });
 
     const statEls = section.current?.querySelectorAll(".stat-num");
@@ -258,9 +285,9 @@ export default function Philosophy() {
           </div>
           <div className="md:hidden flex overflow-x-auto scroll-snap-x gap-4 -mx-6 px-6" ref={statsScrollRef} style={{ paddingBottom: "1rem" }}>
             {stats.map((s, i) => (
-              <div key={i} className="stat-card relative cursor-default flex-shrink-0 scroll-snap-center" style={{ minWidth: "80vw", padding: "clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3rem)", borderRadius: "12px", background: "var(--color-surface)", borderTop: "2px solid var(--color-accent/20)" }}>
-                <div className="stat-glow absolute inset-0 rounded-lg bg-accent-dim opacity-0 scale-80 pointer-events-none transition-none" />
-                <div className="stat-num t-stat text-text" style={{ transition: "color 0.4s ease" }}>0{s.suffix}</div>
+              <div key={i} className="stat-card relative cursor-default flex-shrink-0 scroll-snap-center tap-ripple" style={{ minWidth: "80vw", padding: "clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3rem)", borderRadius: "16px", background: "var(--color-surface)", borderTop: activeStat === i ? "3px solid var(--color-accent)" : "2px solid var(--color-accent/15)", boxShadow: activeStat === i ? "0 8px 32px var(--color-accent/12)" : "0 2px 8px rgba(0,0,0,0.04)", transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+                <div className="stat-glow absolute inset-0 rounded-2xl bg-accent-dim opacity-0 scale-80 pointer-events-none transition-none" />
+                <div className="stat-num t-stat text-text mobile-counter" style={{ transition: "color 0.4s ease" }}>0{s.suffix}</div>
                 <p className="t-caption text-accent" style={{ marginTop: "clamp(1.25rem, 2.5vw, 2rem)", marginBottom: "clamp(0.5rem, 1vw, 1rem)" }}>{s.label}</p>
                 <p className="text-[0.78rem] text-muted tracking-wide">{s.desc}</p>
               </div>
@@ -271,7 +298,7 @@ export default function Philosophy() {
               <div
                 key={i}
                 className={`rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  activeStat === i ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-text-15"
+                  activeStat === i ? "w-6 h-2 bg-accent dot-pulse" : "w-2 h-2 bg-text-15"
                 }`}
               />
             ))}

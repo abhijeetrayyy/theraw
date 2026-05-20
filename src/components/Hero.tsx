@@ -177,17 +177,41 @@ export default function Hero() {
     });
 
     mm.add("(max-width: 1023px)", () => {
-      gsap.to(".hero-mobile-particle", {
-        y: `random(-40, 40)`,
-        x: `random(-30, 30)`,
-        opacity: `random(0.08, 0.25)`,
-        scale: `random(0.9, 1.4)`,
-        duration: `random(5, 9)`,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        stagger: 0.3,
+      gsap.utils.toArray(".hero-mobile-particle").forEach((p, i) => {
+        gsap.to(p as Element, {
+          y: `random(-40, 40)`,
+          x: `random(-30, 30)`,
+          opacity: `random(0.08, 0.25)`,
+          scale: `random(0.9, 1.4)`,
+          duration: `random(5, 9)`,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          stagger: 0.3,
+        });
       });
+
+      // Scroll velocity skew effect for mobile scenes
+      let currentSkew = 0;
+      let targetSkew = 0;
+      let lastScrollTop = 0;
+      let scrollVelocity = 0;
+
+      const onScroll = () => {
+        const st = window.scrollY;
+        scrollVelocity = st - lastScrollTop;
+        targetSkew = Math.max(-3, Math.min(3, scrollVelocity * 0.05));
+        lastScrollTop = st;
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      const updateSkew = () => {
+        currentSkew += (targetSkew - currentSkew) * 0.1;
+        targetSkew *= 0.95;
+        gsap.set(".hero-mobile-scenes", { skewY: currentSkew });
+        requestAnimationFrame(updateSkew);
+      };
+      updateSkew();
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -204,9 +228,9 @@ export default function Hero() {
       tl.to(".hero-entrance-label, .hero-entrance-line, .hero-entrance-subtitle, .hero-entrance-scroll", { opacity: 0, y: -30, duration: 0.12 }, 0);
       tl.to(".hero-entrance-img", { scale: 1.1, clipPath: "inset(0 0 0 50%)", filter: "brightness(0.9)", duration: 0.3 }, 0);
 
-      tl.fromTo(".hero-s2-img-1", { y: "80%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.25, ease: "power3.out" }, 0.05);
-      tl.fromTo(".hero-s2-img-2", { y: "80%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.25, ease: "power3.out" }, 0.15);
-      tl.fromTo(".hero-s2-img-3", { y: "80%", opacity: 0, scale: 0.8 }, { y: "0%", opacity: 1, scale: 1, duration: 0.25, ease: "power3.out" }, 0.25);
+      tl.fromTo(".hero-s2-img-1", { y: "80%", opacity: 0, scale: 0.8, rotate: -3 }, { y: "0%", opacity: 1, scale: 1, rotate: 0, duration: 0.25, ease: "power3.out" }, 0.05);
+      tl.fromTo(".hero-s2-img-2", { y: "80%", opacity: 0, scale: 0.8, rotate: 3 }, { y: "0%", opacity: 1, scale: 1, rotate: 0, duration: 0.25, ease: "power3.out" }, 0.15);
+      tl.fromTo(".hero-s2-img-3", { y: "80%", opacity: 0, scale: 0.8, rotate: -2 }, { y: "0%", opacity: 1, scale: 1, rotate: 0, duration: 0.25, ease: "power3.out" }, 0.25);
 
       tl.fromTo(".hero-s2-connector", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.15, ease: "power2.out" }, 0.35);
       tl.fromTo(".hero-s2-text", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2 }, 0.4);
@@ -236,17 +260,19 @@ export default function Hero() {
       tl.fromTo(".hero-s4-cta", { y: 20, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.15 }, 1.55);
       tl.fromTo(".hero-s4-particles", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, stagger: 0.06, duration: 0.12 }, 1.4);
 
-      const onTouchMove = (e: TouchEvent) => {
-        if (e.touches.length === 1) {
-          const y = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
-          gsap.to(".hero-s2-img-1", { y: `+=${y * 10}`, duration: 1, ease: "power2.out" });
-          gsap.to(".hero-s2-img-2", { y: `+=${y * 15}`, duration: 1, ease: "power2.out" });
-          gsap.to(".hero-s2-img-3", { y: `+=${y * 10}`, duration: 1, ease: "power2.out" });
-        }
-      };
-      window.addEventListener("touchmove", onTouchMove, { passive: true });
+      // Mobile parallax for scene images
+      gsap.utils.toArray(".hero-s2-img-1, .hero-s2-img-2, .hero-s2-img-3").forEach((img, i) => {
+        const el = img as HTMLElement;
+        gsap.to(el.querySelector("div"), {
+          yPercent: -12,
+          ease: "none",
+          scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
+        });
+      });
 
-      return () => window.removeEventListener("touchmove", onTouchMove);
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+      };
     });
 
     return () => window.removeEventListener("mousemove", onMouseMove);

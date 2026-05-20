@@ -99,6 +99,17 @@ export default function Cta() {
       gsap.utils.toArray(".cta-mobile-particle").forEach((p, i) => {
         gsap.to(p as Element, { y: `random(-40, 40)`, x: `random(-25, 25)`, opacity: `random(0.1, 0.3)`, scale: `random(0.9, 1.3)`, duration: `random(4, 7)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: (i as number) * 0.3 });
       });
+
+      // Mobile CTA button glow on touch
+      if (btnRef.current) {
+        const btn = btnRef.current;
+        btn.addEventListener("touchstart", () => {
+          gsap.to(btn.querySelector(".cta-btn-bg"), { scale: 1.05, boxShadow: "0 0 20px var(--color-accent/20)", duration: 0.3 });
+        }, { passive: true });
+        btn.addEventListener("touchend", () => {
+          gsap.to(btn.querySelector(".cta-btn-bg"), { scale: 1, boxShadow: "none", duration: 0.4 });
+        }, { passive: true });
+      }
     });
 
     const btn = btnRef.current;

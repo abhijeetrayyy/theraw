@@ -52,6 +52,7 @@ export default function Marquee() {
 
       if (track) {
         track.addEventListener("touchstart", () => {
+          if (navigator.vibrate) navigator.vibrate(3);
           track.style.animationPlayState = "paused";
         }, { passive: true });
         track.addEventListener("touchend", () => {
@@ -61,6 +62,7 @@ export default function Marquee() {
 
       if (reverseTrack) {
         reverseTrack.addEventListener("touchstart", () => {
+          if (navigator.vibrate) navigator.vibrate(3);
           reverseTrack.style.animationPlayState = "paused";
         }, { passive: true });
         reverseTrack.addEventListener("touchend", () => {
@@ -68,14 +70,25 @@ export default function Marquee() {
         }, { passive: true });
       }
 
-      let scrollTimeout: ReturnType<typeof setTimeout>;
+      let scrollTimeout: ReturnType<typeof setTimeout> | undefined;
+      let velocityTimeout: ReturnType<typeof setTimeout> | undefined;
+      let lastScrollY = 0;
+      let scrollVelocity = 0;
+
       const onScroll = () => {
+        const currentY = window.scrollY;
+        scrollVelocity = Math.abs(currentY - lastScrollY);
+        lastScrollY = currentY;
+
         if (track) {
-          track.style.animationDuration = "20s";
+          const speed = Math.max(15, 60 - scrollVelocity * 0.5);
+          track.style.animationDuration = `${speed}s`;
         }
         if (reverseTrack) {
-          reverseTrack.style.animationDuration = "25s";
+          const speed = Math.max(20, 70 - scrollVelocity * 0.5);
+          reverseTrack.style.animationDuration = `${speed}s`;
         }
+
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           if (track) track.style.animationDuration = "60s";
@@ -87,6 +100,7 @@ export default function Marquee() {
       return () => {
         window.removeEventListener("scroll", onScroll);
         clearTimeout(scrollTimeout);
+        clearTimeout(velocityTimeout);
       };
     });
   }, { scope: section });

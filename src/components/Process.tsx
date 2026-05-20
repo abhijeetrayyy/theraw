@@ -68,6 +68,32 @@ export default function Process() {
 
     mm.add("(max-width: 1023px)", () => {
       gsap.fromTo(".proc-timeline-mobile", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, ease: "none", scrollTrigger: { trigger: ".proc-steps", start: "top 50%", end: "bottom 40%", scrub: true } });
+
+      // Mobile dot pulse animation for active step
+      const updateMobileDots = () => {
+        const dots = document.querySelectorAll(".proc-dot.md\\:hidden");
+        dots.forEach((dot, i) => {
+          if (i === activeStep) {
+            dot.classList.add("dot-pulse");
+          } else {
+            dot.classList.remove("dot-pulse");
+          }
+        });
+      };
+      updateMobileDots();
+
+      // Mobile step expand with premium animation
+      const stepEls = gsap.utils.toArray(".proc-step") as HTMLElement[];
+      stepEls.forEach((step) => {
+        const img = step.querySelector(".proc-img") as HTMLElement;
+        if (img) {
+          gsap.to(img.querySelector("div"), {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: { trigger: img, start: "top bottom", end: "bottom top", scrub: true },
+          });
+        }
+      });
     });
 
     const stepEls = gsap.utils.toArray(".proc-step") as HTMLElement[];
