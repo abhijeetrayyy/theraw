@@ -41,7 +41,7 @@ export default function Process() {
     setExpandedStep(expandedStep === index ? null : index);
   };
 
-  useGSAP(() => {
+    useGSAP(() => {
     const mm = gsap.matchMedia();
 
     gsap.utils.toArray(".proc-float").forEach((shape, i) => {
@@ -64,6 +64,14 @@ export default function Process() {
       headerTl.fromTo(".proc-sub", { y: 40, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, 0.7);
 
       gsap.fromTo(".proc-timeline", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, ease: "none", scrollTrigger: { trigger: ".proc-steps", start: "top 50%", end: "bottom 40%", scrub: true } });
+
+      // Section exit
+      gsap.to(".proc-steps", {
+        opacity: 0.4,
+        y: -30,
+        ease: "none",
+        scrollTrigger: { trigger: ".proc-steps", start: "bottom 20%", end: "bottom top", scrub: true },
+      });
     });
 
     mm.add("(max-width: 1023px)", () => {

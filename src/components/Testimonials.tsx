@@ -53,7 +53,7 @@ export default function Testimonials() {
     if (navigator.vibrate) navigator.vibrate(5);
   };
 
-  useGSAP(() => {
+    useGSAP(() => {
     const mm = gsap.matchMedia();
 
     gsap.utils.toArray(".test-quote-float").forEach((q, i) => {
@@ -109,7 +109,8 @@ export default function Testimonials() {
           tl.fromTo(img, { scale: 0, clipPath: "circle(0% at 50% 50%)" }, { scale: 1, clipPath: "circle(100% at 50% 50%)", duration: 0.9, ease: "power3.out" }, 0.55);
         }
 
-        gsap.to(card, { yPercent: -4, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
+        // Parallax on each card
+        gsap.to(card, { yPercent: -4 - i * 2, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
 
         card.addEventListener("mouseenter", () => {
           gsap.to(card, { y: -12, boxShadow: "0 30px 60px rgba(0,0,0,0.08)", borderColor: "var(--color-accent/30)", duration: 0.5, ease: "power2.out" });
@@ -119,6 +120,15 @@ export default function Testimonials() {
           gsap.to(card, { y: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.04)", borderColor: "var(--color-text-08)", duration: 0.5, ease: "power2.out" });
           gsap.to(card.querySelector(".test-card-accent"), { scaleY: 0, duration: 0.4, ease: "power2.out" });
         });
+      });
+
+      // Section exit
+      gsap.to(".test-card", {
+        opacity: 0.3,
+        y: -30,
+        stagger: 0.1,
+        ease: "none",
+        scrollTrigger: { trigger: section.current, start: "bottom 20%", end: "bottom top", scrub: true },
       });
     });
 
