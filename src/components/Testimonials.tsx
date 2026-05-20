@@ -22,41 +22,31 @@ export default function Testimonials() {
     if (!scrollRef.current) return;
     const container = scrollRef.current;
     const cards = container.querySelectorAll(".test-card");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Array.from(cards).indexOf(entry.target as Element);
-            if (index !== -1) setActiveCard(index);
-          }
-        });
-      },
-      { root: container, threshold: 0.6 }
-    );
-    cards.forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
-  }, []);
 
-  useEffect(() => {
-    if (!scrollRef.current) return;
-    const interval = setInterval(() => {
-      if (!scrollRef.current) return;
-      const container = scrollRef.current;
-      const nextCard = activeCard + 1;
-      if (nextCard < testimonials.length) {
-        const card = container.querySelectorAll(".test-card")[nextCard];
-        if (card) {
-          card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    const onScroll = () => {
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+
+      let closestIndex = 0;
+      let closestDist = Infinity;
+
+      cards.forEach((card, i) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const dist = Math.abs(cardCenter - containerCenter);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIndex = i;
         }
-      } else {
-        const firstCard = container.querySelectorAll(".test-card")[0];
-        if (firstCard) {
-          firstCard.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-        }
-      }
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [activeCard]);
+      });
+
+      setActiveCard(closestIndex);
+    };
+
+    container.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleTestimonialTouch = () => {
     if (navigator.vibrate) navigator.vibrate(5);
@@ -131,15 +121,15 @@ export default function Testimonials() {
 
     mm.add("(max-width: 1023px)", () => {
       const cards = gsap.utils.toArray(".test-card") as HTMLElement[];
-      cards.forEach((card, i) => {
+      cards.forEach((card) => {
         const quote = card.querySelector(".test-quote-text") as HTMLElement;
         const author = card.querySelector(".test-author") as HTMLElement;
         const img = card.querySelector(".test-author-img") as HTMLElement;
         const quoteMarkTop = card.querySelector(".test-quote-mark-top") as HTMLElement;
 
-        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "left 80%", end: "left 30%", scrub: 1.2 } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "left 75%", end: "left 25%", scrub: 1 } });
 
-        tl.fromTo(card, { rotateY: -8, opacity: 0, scale: 0.92 }, { rotateY: 0, opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" }, 0);
+        tl.fromTo(card, { y: 40, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out" }, 0);
 
         if (quoteMarkTop) tl.fromTo(quoteMarkTop, { scale: 0, opacity: 0, rotation: -60 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: "back.out(3)" }, 0.15);
 
@@ -188,30 +178,30 @@ export default function Testimonials() {
             </div>
           </div>
 
-          <div ref={scrollRef} className="md:grid md:grid-cols-3 flex overflow-x-auto scroll-snap-x gap-6 md:gap-0" style={{ gap: "clamp(3rem, 6vw, 5rem)", paddingBottom: "1rem" }}>
+          <div ref={scrollRef} className="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible scroll-snap-x gap-4 md:gap-0 -mx-6 px-6 md:-mx-0 md:px-0" style={{ paddingBottom: "1.5rem" }}>
             {testimonials.map((t, i) => (
-              <div key={i} className="test-card relative group cursor-default flex-shrink-0 scroll-snap-center" style={{ padding: "clamp(2rem, 4vw, 3rem)", borderRadius: "8px", border: "1px solid var(--color-text-08)", transition: "border-color 0.5s ease, box-shadow 0.5s ease", minWidth: "85vw", boxShadow: activeCard === i ? "0 0 20px var(--color-accent/10)" : "none", borderColor: activeCard === i ? "var(--color-accent/25)" : "var(--color-text-08)" }} onTouchStart={handleTestimonialTouch}>
-                <div className="test-quote-mark-top absolute -top-3 left-8 text-5xl font-serif text-accent/10 leading-none select-none">&ldquo;</div>
-                <div style={{ paddingTop: "clamp(3rem, 6vw, 5rem)" }}>
-                  <div className="test-quote-text" style={{ marginBottom: "clamp(4rem, 8vw, 6rem)" }}>
-                    {t.quote.split(" ").map((w, wi) => (<span key={wi} className="inline-block mr-[0.3em]">{w}</span>))}
+              <div key={i} className="test-card relative flex-shrink-0 scroll-snap-center" style={{ minWidth: "85vw", padding: "clamp(2rem, 5vw, 3rem)", borderRadius: "12px", background: "var(--color-surface)", border: "1px solid var(--color-text-08)", transition: "border-color 0.5s ease, box-shadow 0.5s ease", boxShadow: activeCard === i ? "0 8px 30px var(--color-accent/10)" : "0 2px 8px rgba(0,0,0,0.04)", borderColor: activeCard === i ? "var(--color-accent/30)" : "var(--color-text-08)" }} onTouchStart={handleTestimonialTouch}>
+                <div className="test-quote-mark-top absolute -top-2 left-6 text-5xl font-serif text-accent/15 leading-none select-none">&ldquo;</div>
+                <div style={{ paddingTop: "clamp(2.5rem, 5vw, 4rem)" }}>
+                  <div className="test-quote-text" style={{ marginBottom: "clamp(3rem, 6vw, 5rem)" }}>
+                    {t.quote.split(" ").map((w, wi) => (<span key={wi} className="inline-block mr-[0.3em] text-text-70" style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.05rem)", lineHeight: 1.7 }}>{w}</span>))}
                   </div>
                   <div className="test-author flex items-center" style={{ gap: "clamp(1rem, 2vw, 1.5rem)" }}>
-                    <div className="test-author-img w-14 h-14 rounded-full overflow-hidden bg-text-08 flex-shrink-0">
+                    <div className="test-author-img w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden bg-text-08 flex-shrink-0 border-2 border-accent/20">
                       <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${t.img})` }} />
                     </div>
                     <div>
-                      <p className="t-label text-text">{t.name}</p>
-                      <p className="text-sm text-text-30">{t.role}</p>
+                      <p className="t-label text-text" style={{ fontSize: "0.65rem" }}>{t.name}</p>
+                      <p className="text-xs text-text-30">{t.role}</p>
                     </div>
                   </div>
                 </div>
-                <div className="test-quote-mark-bottom absolute bottom-2 right-6 text-4xl font-serif text-accent/10 leading-none select-none md:block hidden">&rdquo;</div>
+                <div className="test-quote-mark-bottom absolute bottom-2 right-4 text-4xl font-serif text-accent/10 leading-none select-none md:block hidden">&rdquo;</div>
               </div>
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-2 md:hidden" style={{ marginTop: "clamp(2rem, 4vw, 3rem)" }}>
+          <div className="flex items-center justify-center gap-2 md:hidden" style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)" }}>
             {testimonials.map((_, i) => (
               <div
                 key={i}
