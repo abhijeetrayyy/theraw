@@ -72,7 +72,7 @@ export default function Footer() {
       ease: "sine.inOut",
     });
 
-    const tl = gsap.timeline({ scrollTrigger: { trigger: footer.current, start: "top 80%" } });
+    const tl = gsap.timeline({ scrollTrigger: { trigger: footer.current, start: "top 80%", end: "top 40%", scrub: 1.5 } });
 
     tl.fromTo(".foot-divider", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
 
@@ -85,7 +85,7 @@ export default function Footer() {
     });
 
     gsap.utils.toArray(".foot-link").forEach((link) => {
-      gsap.fromTo(link as Element, { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out", scrollTrigger: { trigger: link as Element, start: "top 85%" } });
+      gsap.fromTo(link as Element, { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out", scrollTrigger: { trigger: link as Element, start: "top 85%", end: "top 55%", scrub: 0.8 } });
     });
 
     tl.fromTo(".foot-social", { scale: 0, opacity: 0, rotation: -180 }, { scale: 1, opacity: 1, rotation: 0, stagger: 0.1, duration: 0.7, ease: "back.out(3)" }, 0.7);

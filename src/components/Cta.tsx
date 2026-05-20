@@ -38,7 +38,7 @@ export default function Cta() {
 
     gsap.to(".cta-glow", { scale: 1.2, opacity: 0.18, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut" });
 
-    const tl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%" } });
+    const tl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%", end: "top 15%", scrub: 1.5 } });
 
     tl.fromTo(".cta-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
 

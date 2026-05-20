@@ -68,7 +68,7 @@ export default function Testimonials() {
       ease: "sine.inOut",
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%" } });
+    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
     headerTl.fromTo(".test-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
     headerTl.fromTo(".test-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
     headerTl.fromTo(".test-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);

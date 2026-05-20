@@ -44,7 +44,7 @@ export default function Collection() {
       gsap.to(p as Element, { y: `random(-70, 70)`, x: `random(-50, 50)`, opacity: `random(0.1, 0.4)`, duration: `random(5, 8)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: (i as number) * 0.5 });
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%" } });
+    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 55%", end: "top 15%", scrub: 1.5 } });
     headerTl.fromTo(".coll-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
     headerTl.fromTo(".coll-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
     headerTl.fromTo(".coll-heading-word", { y: "140%", opacity: 0, rotateX: -30 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.12, duration: 1.6, ease: "power4.out" }, 0.25);

@@ -73,7 +73,7 @@ export default function Philosophy() {
     });
 
     if (imgRef1.current) {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: imgRef1.current, start: "top 60%" } });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: imgRef1.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
 
       tl.fromTo(imgRef1.current,
         { clipPath: "circle(0% at 50% 50%)", scale: 1.4, filter: "blur(20px)" },
@@ -154,14 +154,14 @@ export default function Philosophy() {
       const suffix = stats[i]?.suffix || "";
       gsap.to({ v: 0 }, {
         v: target, duration: 3.5, ease: "power2.out",
-        scrollTrigger: { trigger: ".phil-stats", start: "top 65%" },
+        scrollTrigger: { trigger: ".phil-stats", start: "top 65%", end: "top 35%", scrub: true },
         onUpdate: function () { (el as HTMLElement).textContent = Math.round(this.targets()[0].v) + suffix; },
       });
     });
 
     gsap.fromTo(".stat-card",
       { y: 120, opacity: 0, rotateX: 20, scale: 0.85 },
-      { y: 0, opacity: 1, rotateX: 0, scale: 1, stagger: 0.25, duration: 1.6, ease: "power3.out", scrollTrigger: { trigger: ".phil-stats", start: "top 65%" } }
+      { y: 0, opacity: 1, rotateX: 0, scale: 1, stagger: 0.25, duration: 1.6, ease: "power3.out", scrollTrigger: { trigger: ".phil-stats", start: "top 65%", end: "top 35%", scrub: 1.5 } }
     );
 
     mm.add("(min-width: 1024px)", () => {
@@ -181,7 +181,7 @@ export default function Philosophy() {
     });
 
     if (imgRef2.current) {
-      const tl2 = gsap.timeline({ scrollTrigger: { trigger: imgRef2.current, start: "top 65%" } });
+      const tl2 = gsap.timeline({ scrollTrigger: { trigger: imgRef2.current, start: "top 65%", end: "top 25%", scrub: 1.5 } });
 
       tl2.fromTo(imgRef2.current,
         { clipPath: "inset(0 0 100% 0)", scale: 1.25 },

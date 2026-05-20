@@ -43,7 +43,7 @@ export default function Projects() {
       ease: "sine.inOut",
     });
 
-    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%" } });
+    const headerTl = gsap.timeline({ scrollTrigger: { trigger: section.current, start: "top 60%", end: "top 20%", scrub: 1.5 } });
     headerTl.fromTo(".proj-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
     headerTl.fromTo(".proj-label-word", { y: "120%", opacity: 0, rotateX: -60 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.08, duration: 1, ease: "power3.out" }, 0.15);
     headerTl.fromTo(".proj-heading-mask", { yPercent: 140, opacity: 0, rotateX: -30 }, { yPercent: 0, opacity: 1, rotateX: 0, stagger: 0.14, duration: 1.6, ease: "power4.out" }, 0.25);
@@ -120,17 +120,17 @@ export default function Projects() {
 
       gsap.fromTo(".proj-banner",
         { clipPath: "inset(0 100% 0 0)", scale: 1.08, filter: "blur(6px)" },
-        { clipPath: "inset(0 0% 0 0)", scale: 1, filter: "blur(0px)", duration: 2.2, ease: "power3.inOut", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 65%" } }
+        { clipPath: "inset(0 0% 0 0)", scale: 1, filter: "blur(0px)", duration: 2.2, ease: "power3.inOut", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 65%", end: "top 25%", scrub: 1.5 } }
       );
 
       gsap.fromTo(".proj-banner-content",
         { y: 40, opacity: 0, filter: "blur(6px)" },
-        { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 60%" } }
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 60%", end: "top 20%", scrub: 1.2 } }
       );
 
       gsap.fromTo(".proj-bottom-img",
         { y: 70, opacity: 0, rotate: 8, scale: 0.85 },
-        { y: 0, opacity: 1, rotate: 0, scale: 1, stagger: 0.18, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".proj-bottom-images", start: "top 75%" } }
+        { y: 0, opacity: 1, rotate: 0, scale: 1, stagger: 0.18, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".proj-bottom-images", start: "top 75%", end: "top 45%", scrub: 1.2 } }
       );
 
       const heroImg = document.querySelector(".proj-hero-img") as HTMLElement;
@@ -216,17 +216,17 @@ export default function Projects() {
 
       gsap.fromTo(".proj-banner",
         { clipPath: "inset(0 100% 0 0)", scale: 1.05, filter: "blur(4px)" },
-        { clipPath: "inset(0 0% 0 0)", scale: 1, filter: "blur(0px)", duration: 1.8, ease: "power3.inOut", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 65%" } }
+        { clipPath: "inset(0 0% 0 0)", scale: 1, filter: "blur(0px)", duration: 1.8, ease: "power3.inOut", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 65%", end: "top 25%", scrub: 1.5 } }
       );
 
       gsap.fromTo(".proj-banner-content",
         { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 60%" } }
+        { y: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".proj-banner-wrap", start: "top 60%", end: "top 20%", scrub: 1.2 } }
       );
 
       gsap.fromTo(".proj-bottom-img",
         { y: 40, opacity: 0, rotate: 6, scale: 0.9 },
-        { y: 0, opacity: 1, rotate: 0, scale: 1, stagger: 0.15, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".proj-bottom-images", start: "top 75%" } }
+        { y: 0, opacity: 1, rotate: 0, scale: 1, stagger: 0.15, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".proj-bottom-images", start: "top 75%", end: "top 45%", scrub: 1.2 } }
       );
 
       // Mobile image parallax on cards
