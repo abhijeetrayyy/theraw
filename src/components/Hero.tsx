@@ -34,6 +34,37 @@ export default function Hero() {
   const particleContainer = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    // ── Standalone entrance (plays once on load, no scroll trigger) ──
+    const entranceTl = gsap.timeline({ delay: 0.3 });
+
+    entranceTl.fromTo(".hero-img-main",
+      { clipPath: "inset(0 100% 0 0)", scale: 1.1 },
+      { clipPath: "inset(0 0% 0 0)", scale: 1, duration: 1.8, ease: "power4.inOut" }, 0
+    );
+
+    entranceTl.fromTo(".hero-grain",
+      { opacity: 0 },
+      { opacity: 0.06, duration: 1.2, ease: "power2.out" }, 0.3
+    );
+    entranceTl.to(".hero-grain", { opacity: 0.035, duration: 0.6 }, 1.2);
+
+    entranceTl.fromTo(".hero-vignette", { opacity: 0 }, { opacity: 0.3, duration: 1, ease: "power2.out" }, 0.5);
+
+    entranceTl.fromTo(".hero-accent-line",
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, duration: 0.8, ease: "power2.inOut" }, 0.4
+    );
+
+    entranceTl.fromTo(".hero-letter",
+      { y: "120%", opacity: 0, rotateX: -70 },
+      { y: "0%", opacity: 1, rotateX: 0, stagger: 0.04, duration: 0.8, ease: "power4.out" }, 0.6
+    );
+
+    entranceTl.fromTo(".hero-label", { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.5);
+    entranceTl.fromTo(".hero-subtitle", { y: 20, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 0.8);
+    entranceTl.fromTo(".hero-scroll", { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 1.1);
+    entranceTl.fromTo(".hero-stat", { y: 20, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, stagger: 0.12, duration: 0.5, ease: "power3.out" }, 1.2);
+
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 1024px)", () => {
@@ -319,17 +350,17 @@ export default function Hero() {
         ctaBtn.addEventListener("mouseenter", burstParticles);
       }
 
-      // 19. Scroll velocity reactivity
-      let velocityTween: gsap.core.Tween | null = null;
+      // 19. Scroll velocity reactivity — affects film grain opacity
+      let grainTween: gsap.core.Tween | null = null;
       ScrollTrigger.create({
         trigger: pinContainer.current,
         start: "top top",
         end: "bottom bottom",
         onUpdate: (self) => {
           const velocity = Math.abs(self.getVelocity());
-          const boost = Math.min(1.5, 1 + velocity / 800);
-          if (velocityTween) velocityTween.kill();
-          velocityTween = gsap.to(tl, { timeScale: boost, duration: 0.3, ease: "power2.out" });
+          const grainBoost = Math.min(0.06, velocity / 4000);
+          if (grainTween) grainTween.kill();
+          grainTween = gsap.to(".hero-grain", { opacity: 0.035 + grainBoost, duration: 0.2, ease: "power2.out" });
         },
       });
     });
@@ -390,7 +421,7 @@ export default function Hero() {
   }, { scope: section });
 
   return (
-    <section id="hero" ref={section} className="relative bg-bg overflow-hidden">
+    <section id="hero" ref={section} className="relative bg-bg">
       <div className="divider" />
 
       <div ref={pinContainer} className="relative" style={{ height: "100dvh" }}>
