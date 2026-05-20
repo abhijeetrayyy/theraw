@@ -142,14 +142,26 @@ export default function Nav({ loaded }: { loaded: boolean }) {
   }, [menuOpen]);
 
   useEffect(() => {
-    if (menuOpen && menuRef.current) {
+    if (!menuRef.current) return;
+
+    if (menuOpen) {
       const tl = gsap.timeline();
+      tl.set(menuRef.current, { pointerEvents: "auto" });
       tl.fromTo(menuRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 0);
       tl.fromTo(menuRef.current.querySelector(".menu-top-half"), { yPercent: -100 }, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0);
       tl.fromTo(menuRef.current.querySelector(".menu-bottom-half"), { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0);
       tl.fromTo(".menu-link", { clipPath: "inset(0 100% 0 0)", y: 60, opacity: 0, rotateX: -20 }, { clipPath: "inset(0 0% 0 0)", y: 0, opacity: 1, rotateX: 0, stagger: 0.08, duration: 0.7, ease: "power3.out" }, 0.2);
       tl.fromTo(".menu-deco", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, stagger: 0.1, duration: 0.8, ease: "power2.inOut" }, 0.3);
       tl.fromTo(".menu-cta", { y: 30, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.45);
+    } else {
+      const tl = gsap.timeline();
+      tl.to(".menu-cta", { y: 20, opacity: 0, scale: 0.95, duration: 0.3, ease: "power2.in" }, 0);
+      tl.to(".menu-link", { clipPath: "inset(0 0% 0 100%)", y: -30, opacity: 0, stagger: 0.04, duration: 0.4, ease: "power3.in" }, 0);
+      tl.to(".menu-deco", { scaleX: 0, opacity: 0, stagger: 0.05, duration: 0.4, ease: "power2.in" }, 0);
+      tl.to(menuRef.current.querySelector(".menu-top-half"), { yPercent: -100, duration: 0.5, ease: "power4.inOut" }, 0.1);
+      tl.to(menuRef.current.querySelector(".menu-bottom-half"), { yPercent: 100, duration: 0.5, ease: "power4.inOut" }, 0.1);
+      tl.to(menuRef.current, { opacity: 0, duration: 0.3, ease: "power2.in" }, 0.2);
+      tl.set(menuRef.current, { pointerEvents: "none" }, "-=0.1");
     }
   }, [menuOpen]);
 
@@ -254,8 +266,8 @@ export default function Nav({ loaded }: { loaded: boolean }) {
 
       <div
         ref={menuRef}
-        className={`fixed inset-0 z-40 md:hidden flex flex-col transition-opacity duration-500 ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-40 md:hidden flex flex-col ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
         style={{ opacity: 0, background: "var(--color-bg)" }}
       >
@@ -294,7 +306,6 @@ export default function Nav({ loaded }: { loaded: boolean }) {
 
             <a
               href="/contact"
-              onClick={(e) => handleNavClick(e, "/contact")}
               className="menu-cta inline-flex items-center gap-3 text-lg font-medium text-accent tap-active"
               style={{ padding: "clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)", borderRadius: "9999px", border: "1px solid var(--color-accent/30)", width: "fit-content" }}
             >
