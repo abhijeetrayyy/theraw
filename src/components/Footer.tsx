@@ -59,80 +59,55 @@ export default function Footer() {
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
-    gsap.utils.toArray(".foot-float").forEach((f, i) => {
-      gsap.to(f as Element, { y: `random(-40, 40)`, x: `random(-20, 20)`, rotation: `random(-15, 15)`, scale: `random(0.8, 1.3)`, duration: `random(5, 8)`, repeat: -1, yoyo: true, ease: "sine.inOut", delay: (i as number) * 0.6 });
+    // Entrance
+    const entranceTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: footer.current,
+        start: "top 80%",
+        end: "top 50%",
+        scrub: 1,
+      },
     });
 
-    gsap.to(".foot-bg-pulse", {
-      opacity: 0.04,
-      scale: 1.05,
-      duration: 10,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-
-    const tl = gsap.timeline({ scrollTrigger: { trigger: footer.current, start: "top 80%", end: "top 40%", scrub: 1.5 } });
-
-    tl.fromTo(".foot-divider", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.4, ease: "power2.inOut", transformOrigin: "left" }, 0);
-
-    tl.fromTo(".foot-brand-letter", { y: "120%", opacity: 0, rotateX: -70, skewY: 8 }, { y: "0%", opacity: 1, rotateX: 0, skewY: 0, stagger: 0.05, duration: 1, ease: "power3.out" }, 0.15);
-
-    tl.fromTo(".foot-tagline", { y: 25, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1, ease: "power3.out" }, 0.5);
+    entranceTl.fromTo(".foot-divider", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.2, ease: "power2.inOut" }, 0);
+    entranceTl.fromTo(".foot-brand-letter", { y: "100%", opacity: 0, rotateX: -70 }, { y: "0%", opacity: 1, rotateX: 0, stagger: 0.04, duration: 0.8, ease: "power3.out" }, 0.15);
+    entranceTl.fromTo(".foot-tagline", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.4);
+    entranceTl.fromTo(".foot-col", { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.12, duration: 0.8, ease: "power3.out" }, 0.3);
+    entranceTl.fromTo(".foot-social", { scale: 0, opacity: 0, rotation: -180 }, { scale: 1, opacity: 1, rotation: 0, stagger: 0.08, duration: 0.6, ease: "back.out(3)" }, 0.5);
+    entranceTl.fromTo(".foot-bottom", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.7);
 
     mm.add("(min-width: 1024px)", () => {
-      tl.fromTo(".foot-col", { y: 50, opacity: 0, rotateX: 15 }, { y: 0, opacity: 1, rotateX: 0, stagger: 0.15, duration: 1, ease: "power3.out" }, 0.4);
-    });
-
-    gsap.utils.toArray(".foot-link").forEach((link) => {
-      gsap.fromTo(link as Element, { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out", scrollTrigger: { trigger: link as Element, start: "top 85%", end: "top 55%", scrub: 0.8 } });
-    });
-
-    tl.fromTo(".foot-social", { scale: 0, opacity: 0, rotation: -180 }, { scale: 1, opacity: 1, rotation: 0, stagger: 0.1, duration: 0.7, ease: "back.out(3)" }, 0.7);
-
-    tl.fromTo(".foot-bottom", { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, 0.9);
-
-    mm.add("(min-width: 1024px)", () => {
+      // Link hover
       gsap.utils.toArray(".foot-link").forEach((link) => {
         const el = link as HTMLElement;
         el.addEventListener("mouseenter", () => {
-          gsap.to(el, { x: 8, duration: 0.4, ease: "power2.out" });
+          gsap.to(el, { x: 8, color: "var(--color-text)", duration: 0.3, ease: "power2.out" });
         });
         el.addEventListener("mouseleave", () => {
-          gsap.to(el, { x: 0, duration: 0.4, ease: "power2.out" });
+          gsap.to(el, { x: 0, color: "var(--color-text-50)", duration: 0.3, ease: "power2.out" });
         });
       });
-    });
 
-    gsap.utils.toArray(".foot-social").forEach((icon) => {
-      const el = icon as HTMLElement;
-      el.addEventListener("mouseenter", () => {
-        gsap.to(el, { scale: 1.15, duration: 0.4, ease: "power2.out" });
+      // Social hover
+      gsap.utils.toArray(".foot-social").forEach((icon) => {
+        const el = icon as HTMLElement;
+        el.addEventListener("mouseenter", () => {
+          gsap.to(el, { scale: 1.15, duration: 0.4, ease: "power2.out" });
+        });
+        el.addEventListener("mouseleave", () => {
+          gsap.to(el, { scale: 1, duration: 0.4, ease: "power2.out" });
+        });
       });
-      el.addEventListener("mouseleave", () => {
-        gsap.to(el, { scale: 1, duration: 0.4, ease: "power2.out" });
-      });
-    });
 
-    // Brand letter hover
-    gsap.utils.toArray(".foot-brand-letter").forEach((letter) => {
-      const el = letter as HTMLElement;
-      el.addEventListener("mouseenter", () => {
-        gsap.to(el, { scale: 1.1, color: "var(--color-accent)", duration: 0.3, ease: "power2.out" });
-      });
-      el.addEventListener("mouseleave", () => {
-        gsap.to(el, { scale: 1, color: "var(--color-text)", duration: 0.4, ease: "power2.out" });
-      });
-    });
-
-    // Link hover underline
-    gsap.utils.toArray(".foot-link").forEach((link) => {
-      const el = link as HTMLElement;
-      el.addEventListener("mouseenter", () => {
-        gsap.to(el, { x: 8, color: "var(--color-text)", duration: 0.3, ease: "power2.out" });
-      });
-      el.addEventListener("mouseleave", () => {
-        gsap.to(el, { x: 0, color: "var(--color-text-50)", duration: 0.3, ease: "power2.out" });
+      // Brand letter hover
+      gsap.utils.toArray(".foot-brand-letter").forEach((letter) => {
+        const el = letter as HTMLElement;
+        el.addEventListener("mouseenter", () => {
+          gsap.to(el, { scale: 1.1, color: "var(--color-accent)", duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener("mouseleave", () => {
+          gsap.to(el, { scale: 1, color: "var(--color-text)", duration: 0.4, ease: "power2.out" });
+        });
       });
     });
   }, { scope: footer });
@@ -149,26 +124,28 @@ export default function Footer() {
 
   return (
     <footer id="contact" ref={footer} className="relative bg-bg-2 overflow-hidden">
-      <div className="foot-bg-pulse absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%, var(--color-accent-dim) 0%, transparent 60%)", opacity: 0, transform: "scale(1)" }} />
-
-      <div className="foot-float absolute top-[15%] right-[10%] w-16 h-16 rounded-full border border-accent/10 pointer-events-none" />
-      <div className="foot-float absolute bottom-[20%] left-[8%] w-12 h-12 rounded-full bg-accent-dim pointer-events-none" />
+      {/* Accent line */}
+      <div className="foot-line-accent absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
       <div style={{ paddingTop: "clamp(6rem, 12vw, 12rem)" }}>
         <div className="wrap">
-          <div className="foot-divider w-full h-[1px] bg-text-08 origin-left" style={{ marginBottom: "clamp(6rem, 12vw, 12rem)" }} />
+          {/* Top divider */}
+          <div className="foot-divider w-full h-[1px] bg-text-08 origin-left mb-16 md:mb-24" style={{ transform: "scaleX(0)", opacity: 0 }} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(4rem, 8vw, 8rem)", marginBottom: "clamp(6rem, 12vw, 12rem)" }}>
+          {/* Main content */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 mb-16 md:mb-24" style={{ gap: "clamp(4rem, 8vw, 8rem)" }}>
+            {/* Brand */}
             <div className="lg:col-span-5">
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-text leading-tight" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)" }}>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-text leading-tight mb-6 md:mb-8">
                 {"RAW SELECT".split("").map((l, i) => (<span key={i} className="foot-brand-letter inline-block">{l === " " ? "\u00A0" : l}</span>))}
               </h2>
-              <p className="foot-tagline t-body-lg text-text-30 max-w-sm">Curated materials for architects and designers who refuse to compromise.</p>
+              <p className="foot-tagline t-body-lg text-text-30 max-w-sm" style={{ opacity: 0 }}>Curated materials for architects and designers who refuse to compromise.</p>
             </div>
 
+            {/* Desktop columns */}
             <div className="hidden lg:col-span-7 lg:grid lg:grid-cols-3" style={{ gap: "clamp(3rem, 6vw, 4rem)" }}>
               <div className="foot-col">
-                <span className="t-label text-accent block" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)" }}>Navigate</span>
+                <span className="t-label text-accent block mb-6 md:mb-8">Navigate</span>
                 <div className="space-y-4">
                   {navLinks.map((link, i) => (
                     <a key={i} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="foot-link block text-text-50 hover:text-text transition-colors duration-300 text-sm">{link.label}</a>
@@ -177,7 +154,7 @@ export default function Footer() {
               </div>
 
               <div className="foot-col">
-                <span className="t-label text-accent block" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)" }}>Contact</span>
+                <span className="t-label text-accent block mb-6 md:mb-8">Contact</span>
                 <div className="space-y-4 text-sm text-text-50">
                   <p>hello@rawselect.com</p>
                   <p>+45 12 34 56 78</p>
@@ -186,13 +163,13 @@ export default function Footer() {
               </div>
 
               <div className="foot-col">
-                <span className="t-label text-accent block" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)" }}>Follow</span>
+                <span className="t-label text-accent block mb-6 md:mb-8">Follow</span>
                 <div className="space-y-4">
                   {["Instagram", "LinkedIn", "Pinterest"].map((s, i) => (
                     <a key={i} href="#" className="foot-link block text-text-50 hover:text-text transition-colors duration-300 text-sm">{s}</a>
                   ))}
                 </div>
-                <div className="flex items-center gap-3" style={{ marginTop: "clamp(2rem, 4vw, 3rem)" }}>
+                <div className="flex items-center gap-3 mt-6 md:mt-8">
                   <a href="#" className="foot-social w-9 h-9 rounded-full border border-text-08 flex items-center justify-center text-text-30 hover:text-accent hover:border-accent/30 transition-all duration-300">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                   </a>
@@ -206,6 +183,7 @@ export default function Footer() {
               </div>
             </div>
 
+            {/* Mobile accordions */}
             <div className="lg:hidden space-y-0">
               <MobileAccordion title="Navigate">
                 <div className="space-y-3">
@@ -227,7 +205,7 @@ export default function Footer() {
                     <a key={i} href="#" className="foot-link block text-text-50 hover:text-text transition-colors duration-300 text-sm py-1">{s}</a>
                   ))}
                 </div>
-                <div className="flex items-center gap-3" style={{ marginTop: "1rem" }}>
+                <div className="flex items-center gap-3 mt-4">
                   <a href="#" className="foot-social w-9 h-9 rounded-full border border-text-08 flex items-center justify-center text-text-30">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                   </a>
@@ -242,8 +220,9 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="foot-bottom flex flex-col md:flex-row justify-between items-center" style={{ paddingTop: "clamp(3rem, 6vw, 4rem)", borderTop: "1px solid var(--color-text-08)" }}>
-            <div className="flex items-center flex-wrap justify-center" style={{ gap: "clamp(1.5rem, 3vw, 2.5rem)" }}>
+          {/* Bottom bar */}
+          <div className="foot-bottom flex flex-col md:flex-row justify-between items-center py-6 md:py-8" style={{ borderTop: "1px solid var(--color-text-08)", opacity: 0 }}>
+            <div className="flex items-center flex-wrap justify-center mb-4 md:mb-0" style={{ gap: "clamp(1.5rem, 3vw, 2.5rem)" }}>
               {legalLinks.map((link, i) => (
                 <a key={i} href={link.href} className="foot-link text-xs text-text-30 hover:text-text transition-colors duration-300">{link.label}</a>
               ))}
@@ -252,7 +231,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="divider" />
-      <div className="wrap" style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)", paddingBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}>
+      <div className="wrap py-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-text-30">&copy; {new Date().getFullYear()} Raw Select. All rights reserved.</p>
           <a href="#hero" onClick={(e) => handleNavClick(e, "#hero")} className="t-label text-accent hover:text-text transition-colors duration-300 flex items-center gap-2 tap-active">
