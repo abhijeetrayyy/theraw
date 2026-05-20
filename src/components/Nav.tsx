@@ -154,14 +154,19 @@ export default function Nav({ loaded }: { loaded: boolean }) {
       tl.fromTo(".menu-deco", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, stagger: 0.1, duration: 0.8, ease: "power2.inOut" }, 0.3);
       tl.fromTo(".menu-cta", { y: 30, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.45);
     } else {
-      const tl = gsap.timeline();
+      const tl = gsap.timeline({
+        onComplete: () => {
+          if (menuRef.current) {
+            gsap.set(menuRef.current, { pointerEvents: "none", opacity: 0 });
+          }
+        }
+      });
+      tl.to(menuRef.current, { opacity: 0, duration: 0.4, ease: "power2.in" }, 0);
       tl.to(".menu-cta", { y: 20, opacity: 0, scale: 0.95, duration: 0.3, ease: "power2.in" }, 0);
       tl.to(".menu-link", { clipPath: "inset(0 0% 0 100%)", y: -30, opacity: 0, stagger: 0.04, duration: 0.4, ease: "power3.in" }, 0);
       tl.to(".menu-deco", { scaleX: 0, opacity: 0, stagger: 0.05, duration: 0.4, ease: "power2.in" }, 0);
-      tl.to(menuRef.current.querySelector(".menu-top-half"), { yPercent: -100, duration: 0.5, ease: "power4.inOut" }, 0.1);
-      tl.to(menuRef.current.querySelector(".menu-bottom-half"), { yPercent: 100, duration: 0.5, ease: "power4.inOut" }, 0.1);
-      tl.to(menuRef.current, { opacity: 0, duration: 0.3, ease: "power2.in" }, 0.2);
-      tl.set(menuRef.current, { pointerEvents: "none" }, "-=0.1");
+      tl.to(menuRef.current.querySelector(".menu-top-half"), { yPercent: -100, duration: 0.5, ease: "power4.inOut" }, 0);
+      tl.to(menuRef.current.querySelector(".menu-bottom-half"), { yPercent: 100, duration: 0.5, ease: "power4.inOut" }, 0);
     }
   }, [menuOpen]);
 
@@ -266,10 +271,8 @@ export default function Nav({ loaded }: { loaded: boolean }) {
 
       <div
         ref={menuRef}
-        className={`fixed inset-0 z-40 md:hidden flex flex-col ${
-          menuOpen ? "pointer-events-auto" : "pointer-events-none"
-        }`}
-        style={{ opacity: 0, background: "var(--color-bg)" }}
+        className={`fixed inset-0 z-40 md:hidden flex flex-col`}
+        style={{ pointerEvents: "none", opacity: 0, background: "var(--color-bg)" }}
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 0%, var(--color-accent-dim) 0%, var(--color-bg) 70%)" }} />
